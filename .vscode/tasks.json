@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "flutterBuildMode",
+      "type": "pickString",
+      "description": "Select Flutter build mode",
+      "options": ["debug", "profile", "release"],
+      "default": "release"
+    }
+  ],
+  "tasks": [
+    {
+      "label": "Infennon Labs Homepage: Analyze",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd /Users/adaminferrera/Documents/infennon_labs_home && ../.workspace-copilot/hooks/validate_flutter_env.sh /Users/adaminferrera/Documents/infennon_labs_home analyze generic && flutter analyze"
+      ],
+      "options": {
+        "cwd": "/Users/adaminferrera/Documents/infennon_labs_home"
+      }
+    },
+    {
+      "label": "Infennon Labs Homepage: Test",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd /Users/adaminferrera/Documents/infennon_labs_home && ../.workspace-copilot/hooks/validate_flutter_env.sh /Users/adaminferrera/Documents/infennon_labs_home test generic && flutter test"
+      ],
+      "options": {
+        "cwd": "/Users/adaminferrera/Documents/infennon_labs_home"
+      }
+    },
+    {
+      "label": "Infennon Labs Homepage: Run Chrome",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd /Users/adaminferrera/Documents/infennon_labs_home && ../.workspace-copilot/hooks/validate_flutter_env.sh /Users/adaminferrera/Documents/infennon_labs_home run chrome && flutter run --${input:flutterBuildMode} -d chrome"
+      ],
+      "options": {
+        "cwd": "/Users/adaminferrera/Documents/infennon_labs_home"
+      },
+      "isBackground": true,
+      "group": "build"
+    },
+    {
+      "label": "Infennon Labs Homepage: Build Web",
+      "type": "shell",
+      "command": "zsh",
+      "args": [
+        "-lc",
+        "cd /Users/adaminferrera/Documents/infennon_labs_home && ../.workspace-copilot/hooks/validate_flutter_env.sh /Users/adaminferrera/Documents/infennon_labs_home build web && flutter build web --${input:flutterBuildMode}"
+      ],
+      "options": {
+        "cwd": "/Users/adaminferrera/Documents/infennon_labs_home"
+      },
+      "group": "build"
+    }
+  ]
+}

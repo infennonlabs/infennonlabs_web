@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Infennon Labs Mark</title>
+  <desc id="desc">Circular blue mark with star motif.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B5E8B" />
+      <stop offset="100%" stop-color="#4CB4E7" />
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="56" fill="url(#bg)" />
+  <path d="M64 26L72 50L98 50L76 66L84 92L64 76L44 92L52 66L30 50L56 50Z" fill="#FFFFFF" fill-opacity="0.92" />
+</svg>
