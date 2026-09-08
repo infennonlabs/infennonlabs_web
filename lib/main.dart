@@ -31,7 +31,8 @@ class InfennonLabsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Infennon Labs',
+      title: 'Learning Games',
+      scrollBehavior: const _NoScrollbarBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: BrandTheme.ocean,
@@ -55,38 +56,43 @@ class HomePage extends StatelessWidget {
   static final List<ProjectEntry> _projects = <ProjectEntry>[
     ProjectEntry(
       title: 'Alpha Kids',
-      description:
-          'Foundational learning tools for letters, sounds, and early wins.',
+      description: 'Emphasis on the alphabet and associated words and sounds',
       slug: 'alpha-kids',
       icon: Icons.abc,
+      gradeRangeLabel: 'Early-PreK',
+      ageOrder: 0,
     ),
     ProjectEntry(
       title: 'Does It Solve',
-      description:
-          'Puzzle-driven practice that rewards clear thinking and persistence.',
+      description: 'Simple math logical thinking',
       slug: 'does-it-solve',
       icon: Icons.extension_outlined,
+      gradeRangeLabel: 'K-1st',
+      ageOrder: 20,
     ),
     ProjectEntry(
       title: 'Mahjong',
-      description:
-          'A classic tile-matching experience tuned for quick, satisfying play.',
+      description: 'Fun pattern recognition learning',
       slug: 'mahjong',
       icon: Icons.grid_view_rounded,
+      gradeRangeLabel: 'PreK-5th',
+      ageOrder: 13,
     ),
     ProjectEntry(
       title: 'Make It',
-      description:
-          'Creative building and making games that encourage imagination.',
+      description: 'Critical thinking and spelling through recipe creations',
       slug: 'make-it',
       icon: Icons.build_circle_outlined,
+      gradeRangeLabel: 'PreK-2nd',
+      ageOrder: 10,
     ),
     ProjectEntry(
       title: 'Math Adventures Kids',
-      description:
-          'Playful math paths for patterns, equations, and confidence.',
+      description: 'Build strong math skills through patterns and problem solving',
       slug: 'math-adventures-kids',
       icon: Icons.calculate_outlined,
+      gradeRangeLabel: 'PreK-2nd',
+      ageOrder: 11,
     ),
     ProjectEntry(
       title: 'Memory Match',
@@ -94,20 +100,24 @@ class HomePage extends StatelessWidget {
           'Card-flip memory games designed for recognition and recall.',
       slug: 'memory-match',
       icon: Icons.style_outlined,
+      gradeRangeLabel: 'PreK-2nd',
+      ageOrder: 12,
     ),
     ProjectEntry(
       title: 'Reading Writing Kids',
-      description:
-          'Reading and writing practice presented with calm, friendly structure.',
+      description: 'Read and write with confidence',
       slug: 'reading-writing-kids',
       icon: Icons.menu_book_outlined,
+      gradeRangeLabel: 'K-3rd',
+      ageOrder: 21,
     ),
     ProjectEntry(
       title: 'Sight Word Search',
-      description:
-          'Word-search gameplay built to reinforce sight-word fluency.',
+      description: 'Word search and spelling practice',
       slug: 'sight-word-search',
       icon: Icons.search_outlined,
+      gradeRangeLabel: 'K-5th',
+      ageOrder: 22,
     ),
   ];
 
@@ -130,16 +140,15 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    _Header(
-                      projectCount: _projects.length,
-                      baseUrl: _projectBaseUrl,
-                    ),
+                    const _Header(),
                     SizedBox(height: Responsive.spacing(context, 3)),
                     _ProjectSection(projects: _projects, onTap: _openProject),
                     SizedBox(height: Responsive.spacing(context, 3)),
-                    const _MissionSection(),
-                    SizedBox(height: Responsive.spacing(context, 2.5)),
-                    const _ContactSection(email: 'contact@infennonlabs.com'),
+                    const _AboutSection(),
+                    SizedBox(height: Responsive.spacing(context, 3)),
+                    const _ContactSection(),
+                    SizedBox(height: Responsive.spacing(context, 1.5)),
+                    const _LegalPlaceholderLinks(),
                   ],
                 ),
               ),
@@ -157,12 +166,31 @@ class ProjectEntry {
     required this.description,
     required this.slug,
     required this.icon,
+    this.gradeRangeLabel,
+    this.ageOrder,
+    this.isPlaceholder = false,
   });
 
   final String title;
   final String description;
   final String slug;
   final IconData icon;
+  final String? gradeRangeLabel;
+  final int? ageOrder;
+  final bool isPlaceholder;
+}
+
+class _NoScrollbarBehavior extends MaterialScrollBehavior {
+  const _NoScrollbarBehavior();
+
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return child;
+  }
 }
 
 class _Backdrop extends StatelessWidget {
@@ -230,10 +258,7 @@ class _GlowBubble extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.projectCount, required this.baseUrl});
-
-  final int projectCount;
-  final String baseUrl;
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
@@ -243,176 +268,45 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: <Widget>[
-            const _BrandLockup(),
-            _InfoChip(label: 'Flutter Web homepage'),
-            _InfoChip(label: '$projectCount projects'),
-          ],
+        SizedBox(height: Responsive.spacing(context, 0.75)),
+        Text(
+          'Learning Games',
+          style: TextStyle(
+            color: BrandTheme.ocean.withValues(alpha: 0.9),
+            fontSize: isCompact ? 12 : 13,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 2.4,
+          ),
         ),
-        SizedBox(height: Responsive.spacing(context, 2.5)),
+        SizedBox(height: Responsive.spacing(context, 0.9)),
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 860),
+          constraints: const BoxConstraints(maxWidth: 760),
           child: Text(
-            'Infennon Labs builds playful learning products with crisp, simple navigation.',
+            'InfennonLabs',
             style: TextStyle(
               fontFamily: GoogleFonts.fredoka().fontFamily,
-              fontSize: isCompact ? 36 : 54,
-              height: 0.98,
+              fontSize: isCompact ? 38 : 58,
+              height: 0.96,
               fontWeight: FontWeight.w900,
-              letterSpacing: -1.2,
+              letterSpacing: -1.4,
               color: BrandTheme.ink,
             ),
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 1.5)),
+        SizedBox(height: Responsive.spacing(context, 0.7)),
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 740),
+          constraints: const BoxConstraints(maxWidth: 760),
           child: Text(
-            'Choose a project below to open the live experience. Each card points directly to its Cloudflare home so the landing page stays lightweight and easy to scan.',
+            'Early learning tools for the developing child PreK-5th grades',
             style: TextStyle(
-              fontSize: isCompact ? 17 : 19,
-              height: 1.6,
+              fontSize: isCompact ? 16 : 18,
+              height: 1.45,
               color: const Color(0xFF445062),
               fontWeight: FontWeight.w700,
             ),
           ),
         ),
-        SizedBox(height: Responsive.spacing(context, 2)),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: <Widget>[
-            _HeroPill(text: 'Simple UI'),
-            _HeroPill(text: 'Kids learning'),
-            _HeroPill(text: 'Cloudflare links'),
-            _HeroPill(text: baseUrl),
-          ],
-        ),
       ],
-    );
-  }
-}
-
-class _BrandLockup extends StatelessWidget {
-  const _BrandLockup();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: BrandTheme.lime.withValues(alpha: 0.55)),
-        boxShadow: const <BoxShadow>[
-          BoxShadow(
-            color: Color(0x2213293A),
-            blurRadius: 16,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            width: 38,
-            height: 38,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[BrandTheme.ocean, BrandTheme.sky],
-              ),
-            ),
-            child: const Icon(
-              Icons.auto_awesome_rounded,
-              color: Colors.white,
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                'Infennon Labs',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.fredoka().fontFamily,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  letterSpacing: 0.1,
-                  color: BrandTheme.ink,
-                ),
-              ),
-              const Text(
-                'Playful Learning Studio',
-                style: TextStyle(
-                  color: Color(0xFF3E566B),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11.5,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: BrandTheme.ocean,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: 13,
-        ),
-      ),
-    );
-  }
-}
-
-class _HeroPill extends StatelessWidget {
-  const _HeroPill({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: const Color(0xFFD7E2EA)),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF334155),
-        ),
-      ),
     );
   }
 }
@@ -458,6 +352,28 @@ class _ProjectSection extends StatelessWidget {
         : width >= 720
         ? 2
         : 1;
+    final liveProjects = projects
+        .where((ProjectEntry entry) => !entry.isPlaceholder)
+        .toList()
+      ..sort((ProjectEntry a, ProjectEntry b) {
+        final left = a.ageOrder ?? 999;
+        final right = b.ageOrder ?? 999;
+        return left.compareTo(right);
+      });
+    final remainder = liveProjects.length % columns;
+    final placeholderCount = remainder == 0 ? columns : columns - remainder;
+    final displayProjects = <ProjectEntry>[
+      ...liveProjects,
+      for (var i = 0; i < placeholderCount; i++)
+        ProjectEntry(
+          title: 'More Games Soon',
+          description:
+              'New learning games are on the way. Check back for future launches.',
+          slug: '__coming-soon-$i',
+          icon: Icons.auto_awesome,
+          isPlaceholder: true,
+        ),
+    ];
     final aspectRatio = columns == 1
         ? 0.84
         : columns == 2
@@ -467,13 +383,8 @@ class _ProjectSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const _SectionLabel(
-          title: 'Projects',
-          subtitle: 'Tap a card to open the live app.',
-        ),
-        const SizedBox(height: 18),
         GridView.builder(
-          itemCount: projects.length,
+          itemCount: displayProjects.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -483,14 +394,14 @@ class _ProjectSection extends StatelessWidget {
             childAspectRatio: aspectRatio,
           ),
           itemBuilder: (BuildContext context, int index) {
-            final entry = projects[index];
+            final entry = displayProjects[index];
             final palette = ModePalettes.byIndex(index);
             return _StaggeredReveal(
               index: index,
               child: _ProjectCard(
                 entry: entry,
                 palette: palette,
-                onTap: () => onTap(entry),
+                onTap: entry.isPlaceholder ? null : () => onTap(entry),
               ),
             );
           },
@@ -509,7 +420,7 @@ class _ProjectCard extends StatelessWidget {
 
   final ProjectEntry entry;
   final ModePalette palette;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +453,7 @@ class _ProjectCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       width: isCompact ? 44 : 52,
@@ -559,12 +470,43 @@ class _ProjectCard extends StatelessWidget {
                         size: isCompact ? 26 : 30,
                       ),
                     ),
+                    if (!entry.isPlaceholder && entry.gradeRangeLabel != null) ...<Widget>[
+                      SizedBox(width: isCompact ? 8 : 10),
+                      Flexible(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: isCompact ? 10 : 12,
+                              vertical: isCompact ? 5 : 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(999),
+                            ),
+                            child: Text(
+                              entry.gradeRangeLabel!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: const Color(0xFF1E293B),
+                                fontWeight: FontWeight.w900,
+                                fontSize: isCompact ? 12 : 13,
+                                height: 1,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     const Spacer(),
-                    Icon(
-                      Icons.open_in_new_rounded,
-                      color: palette.foreground.withValues(alpha: 0.9),
-                      size: isCompact ? 18 : 20,
-                    ),
+                    if (!entry.isPlaceholder)
+                      Icon(
+                        Icons.open_in_new_rounded,
+                        color: palette.foreground.withValues(alpha: 0.9),
+                        size: isCompact ? 18 : 20,
+                      ),
                   ],
                 ),
                 SizedBox(height: isCompact ? 14 : 18),
@@ -587,16 +529,58 @@ class _ProjectCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: isCompact ? 10 : 18),
-                Text(
-                  'infennonlabs.com/${entry.slug}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: palette.foreground.withValues(alpha: 0.92),
-                    fontSize: isCompact ? 12.5 : 13.5,
-                    fontWeight: FontWeight.w700,
-                  ),
+                SizedBox(height: isCompact ? 14 : 22),
+                LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final badgeGap = isCompact ? 8.0 : 10.0;
+                    final availableWidth = constraints.maxWidth;
+                    final badgeWidth = (availableWidth - (badgeGap * 2)) / 3;
+                    final badgeHeight = badgeWidth.clamp(
+                      isCompact ? 34.0 : 38.0,
+                      isCompact ? 48.0 : 54.0,
+                    );
+                    final iconSize = (badgeHeight * 0.44).clamp(16.0, 22.0);
+
+                    return Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: _PlatformBadge(
+                            icon: Icons.desktop_windows_rounded,
+                            label: 'Desktop/Web',
+                            foreground: palette.foreground,
+                            background: palette.effectiveIconBackground,
+                            height: badgeHeight,
+                            iconSize: iconSize,
+                            comingSoon: entry.isPlaceholder,
+                          ),
+                        ),
+                        SizedBox(width: badgeGap),
+                        Expanded(
+                          child: _PlatformBadge(
+                            icon: Icons.apple,
+                            label: 'iOS',
+                            foreground: palette.foreground,
+                            background: palette.effectiveIconBackground,
+                            height: badgeHeight,
+                            iconSize: iconSize,
+                            comingSoon: true,
+                          ),
+                        ),
+                        SizedBox(width: badgeGap),
+                        Expanded(
+                          child: _PlatformBadge(
+                            icon: Icons.android_rounded,
+                            label: 'Android',
+                            foreground: palette.foreground,
+                            background: palette.effectiveIconBackground,
+                            height: badgeHeight,
+                            iconSize: iconSize,
+                            comingSoon: true,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -607,100 +591,91 @@ class _ProjectCard extends StatelessWidget {
   }
 }
 
-class _MissionSection extends StatelessWidget {
-  const _MissionSection();
+class _PlatformBadge extends StatelessWidget {
+  const _PlatformBadge({
+    required this.icon,
+    required this.label,
+    required this.foreground,
+    required this.background,
+    required this.height,
+    required this.iconSize,
+    required this.comingSoon,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color foreground;
+  final Color background;
+  final double height;
+  final double iconSize;
+  final bool comingSoon;
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final isCompact = width < 860;
+    final mutedForeground = Colors.white.withValues(alpha: 0.62);
+    final badgeForeground = comingSoon ? mutedForeground : foreground.withValues(alpha: 0.92);
+    final badgeBackground = comingSoon
+        ? const Color(0xFFF1F4F8)
+        : background.withValues(alpha: 0.18);
 
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.86),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: BrandTheme.sky.withValues(alpha: 0.35)),
-      ),
-      child: isCompact
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const <Widget>[
-                _SectionLabel(
-                  title: 'About',
-                  subtitle:
-                      'Simple, friendly learning tools with a playful edge.',
-                ),
-                SizedBox(height: 16),
-                _SectionBody(
-                  text:
-                      'Infennon Labs creates approachable learning experiences that stay focused on clarity, delight, and fast access to the actual project.',
-                ),
-                SizedBox(height: 24),
-                _SectionLabel(
-                  title: 'Mission',
-                  subtitle: 'Make the homepage feel calm, quick, and useful.',
-                ),
-                SizedBox(height: 16),
-                _SectionBody(
-                  text:
-                      'This hub is intentionally lightweight: one page, clear project cards, and direct links to the live experiences.',
-                ),
-              ],
-            )
-          : const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _SectionLabel(
-                        title: 'About',
-                        subtitle:
-                            'Simple, friendly learning tools with a playful edge.',
-                      ),
-                      SizedBox(height: 16),
-                      _SectionBody(
-                        text:
-                            'Infennon Labs creates approachable learning experiences that stay focused on clarity, delight, and fast access to the actual project.',
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 28),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _SectionLabel(
-                        title: 'Mission',
-                        subtitle:
-                            'Make the homepage feel calm, quick, and useful.',
-                      ),
-                      SizedBox(height: 16),
-                      _SectionBody(
-                        text:
-                            'This hub is intentionally lightweight: one page, clear project cards, and direct links to the live experiences.',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+    return Tooltip(
+      message: comingSoon ? '$label coming soon' : label,
+      child: SizedBox(
+        height: height,
+        child: Container(
+          decoration: BoxDecoration(
+            color: badgeBackground,
+            borderRadius: BorderRadius.circular(comingSoon ? height * 0.22 : height * 0.36),
+            border: Border.all(
+              color: comingSoon
+                  ? const Color(0xFFD7DEE8)
+                  : foreground.withValues(alpha: 0.16),
             ),
+          ),
+          child: comingSoon
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      icon,
+                      size: iconSize,
+                      color: const Color(0xFF738091),
+                    ),
+                    SizedBox(height: height * 0.08),
+                    Text(
+                      'Coming soon',
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: const Color(0xFF738091),
+                        fontSize: height * 0.18,
+                        fontWeight: FontWeight.w800,
+                        height: 1,
+                      ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Icon(
+                    icon,
+                    size: iconSize,
+                    color: badgeForeground,
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }
 
 class _ContactSection extends StatelessWidget {
-  const _ContactSection({required this.email});
+  const _ContactSection();
 
-  final String email;
-
-  Future<void> _openEmail(String subject) async {
+  Future<void> _openEmail(String to, String subject) async {
     final uri = Uri(
       scheme: 'mailto',
-      path: email,
+      path: to,
       queryParameters: <String, String>{'subject': subject},
     );
     await _launchUri(uri);
@@ -726,40 +701,125 @@ class _ContactSection extends StatelessWidget {
         children: <Widget>[
           const _SectionLabel(
             title: 'Contact',
-            subtitle: 'Reach out anytime at contact@infennonlabs.com.',
+            subtitle: '',
             titleColor: Colors.white,
             subtitleColor: Color(0xFFD3D9E3),
           ),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: <Widget>[
-              _ContactChip(
-                icon: Icons.email_outlined,
-                label: 'General',
-                value: email,
-                onTap: () => _openEmail('Infennon Labs Inquiry'),
-              ),
-              _ContactChip(
-                icon: Icons.campaign_outlined,
-                label: 'Partnerships',
-                value: email,
-                onTap: () => _openEmail('Partnership Request'),
-              ),
-              _ContactChip(
-                icon: Icons.support_agent_outlined,
-                label: 'Support',
-                value: email,
-                onTap: () => _openEmail('Support Request'),
-              ),
-              _ContactChip(
-                icon: Icons.lightbulb_outline,
-                label: 'Ideas',
-                value: email,
-                onTap: () => _openEmail('New Project Idea'),
-              ),
-            ],
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              const gap = 12.0;
+              final isCompact = constraints.maxWidth < 760;
+              final columns = isCompact ? 1 : 2;
+              final chipWidth =
+                  (constraints.maxWidth - (gap * (columns - 1))) / columns;
+
+              Widget chip(
+                IconData icon,
+                String label,
+                String value,
+                VoidCallback? onTap,
+              ) {
+                return SizedBox(
+                  width: chipWidth,
+                  child: _ContactChip(
+                    icon: icon,
+                    label: label,
+                    value: value,
+                    onTap: onTap,
+                  ),
+                );
+              }
+
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: <Widget>[
+                  chip(
+                    Icons.email_outlined,
+                    'General',
+                    'contact@infennonlabs.com',
+                    () => _openEmail(
+                      'contact@infennonlabs.com',
+                      'Infennon Labs Inquiry',
+                    ),
+                  ),
+                  chip(
+                    Icons.campaign_outlined,
+                    'Partnerships',
+                    'partners@infennonlabs.com',
+                    () => _openEmail(
+                      'partners@infennonlabs.com',
+                      'Partnership Request',
+                    ),
+                  ),
+                  chip(
+                    Icons.support_agent_outlined,
+                    'Support',
+                    'support@infennonlabs.com',
+                    () => _openEmail(
+                      'support@infennonlabs.com',
+                      'Support Request',
+                    ),
+                  ),
+                  chip(
+                    Icons.volunteer_activism_outlined,
+                    'Donate Here',
+                    'Future link coming',
+                    null,
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutSection extends StatelessWidget {
+  const _AboutSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final isCompact = MediaQuery.sizeOf(context).width < 760;
+
+    return Container(
+      padding: EdgeInsets.all(isCompact ? 20 : 26),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.88),
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0xFFDDE7F2)),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x24112537),
+            blurRadius: 22,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'About',
+            style: TextStyle(
+              color: BrandTheme.ink,
+              fontSize: isCompact ? 24 : 28,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.4,
+            ),
+          ),
+          SizedBox(height: isCompact ? 10 : 12),
+          Text(
+            'InfennonLabs learning is an effort to provide truly free learning experiences for young children as they begin their journey through school. The goal is to present a clear experience without the need for a subscription or distracting interface/characters. The focus should be on learning and getting stronger skills for life. These projects have been built based on the experiences I\'ve had with my own two kids. One day I would like for this platform to be a vessel in which any child could interact to have their own tailored games made for their specific development needs.',
+            style: TextStyle(
+              fontSize: isCompact ? 15 : 17,
+              height: 1.55,
+              color: const Color(0xFF334155),
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ],
       ),
@@ -778,37 +838,48 @@ class _ContactChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final disabled = onTap == null;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Ink(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
+          color: Colors.white.withValues(alpha: disabled ? 0.05 : 0.08),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: disabled ? 0.08 : 0.12),
+          ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(icon, size: 18, color: Colors.white),
+            Icon(
+              icon,
+              size: 18,
+              color: Colors.white.withValues(alpha: disabled ? 0.7 : 1),
+            ),
             const SizedBox(width: 8),
             Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: disabled ? 0.76 : 1),
                 fontWeight: FontWeight.w800,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               value,
-              style: const TextStyle(
-                color: Color(0xFFD4DCEA),
+              style: TextStyle(
+                color: const Color(0xFFD4DCEA).withValues(
+                  alpha: disabled ? 0.82 : 1,
+                ),
                 fontWeight: FontWeight.w700,
                 fontSize: 12.5,
               ),
@@ -823,7 +894,7 @@ class _ContactChip extends StatelessWidget {
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({
     required this.title,
-    required this.subtitle,
+    this.subtitle = '',
     this.titleColor = const Color(0xFF111827),
     this.subtitleColor = const Color(0xFF4B5563),
   });
@@ -835,6 +906,8 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasSubtitle = subtitle.trim().isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -847,35 +920,46 @@ class _SectionLabel extends StatelessWidget {
             letterSpacing: -0.5,
           ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          subtitle,
-          style: TextStyle(
-            color: subtitleColor,
-            fontSize: 15.5,
-            height: 1.5,
-            fontWeight: FontWeight.w500,
+        if (hasSubtitle) ...<Widget>[
+          const SizedBox(height: 6),
+          Text(
+            subtitle,
+            style: TextStyle(
+              color: subtitleColor,
+              fontSize: 15.5,
+              height: 1.5,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
 }
 
-class _SectionBody extends StatelessWidget {
-  const _SectionBody({required this.text});
-
-  final String text;
+class _LegalPlaceholderLinks extends StatelessWidget {
+  const _LegalPlaceholderLinks();
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: Color(0xFF334155),
-        fontSize: 16,
-        height: 1.65,
-        fontWeight: FontWeight.w500,
+    final textStyle = TextStyle(
+      color: const Color(0xFF667085),
+      fontSize: 13,
+      fontWeight: FontWeight.w700,
+      decoration: TextDecoration.underline,
+      decorationColor: const Color(0xFF98A2B3),
+    );
+
+    return Center(
+      child: Text.rich(
+        TextSpan(
+          children: <InlineSpan>[
+            TextSpan(text: 'Privacy Policy', style: textStyle),
+            const TextSpan(text: '  |  '),
+            TextSpan(text: 'Terms of Service', style: textStyle),
+          ],
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }

@@ -6,9 +6,14 @@ void main() {
   testWidgets('homepage renders project hub', (WidgetTester tester) async {
     await tester.pumpWidget(const InfennonLabsApp());
 
-    expect(find.text('Infennon Labs'), findsWidgets);
-    expect(find.text('Projects'), findsOneWidget);
-    expect(find.text('About'), findsOneWidget);
+    expect(find.text('Learning Games'), findsOneWidget);
+    expect(find.text('InfennonLabs'), findsOneWidget);
+    expect(
+      find.text(
+        'Early learning tools for the developing child PreK-5th grades',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Contact'), findsOneWidget);
     expect(find.text('Alpha Kids'), findsOneWidget);
   });
