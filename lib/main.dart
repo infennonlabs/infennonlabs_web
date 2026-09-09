@@ -90,7 +90,7 @@ class HomePage extends StatelessWidget {
       title: 'Math Adventures Kids',
       description:
           'Build strong math skills through patterns and problem solving',
-      slug: 'math-adventures-kids',
+      slug: 'math-adventure',
       icon: Icons.calculate_outlined,
       gradeRangeLabel: 'PreK-2nd',
       ageOrder: 11,
@@ -107,7 +107,7 @@ class HomePage extends StatelessWidget {
     ProjectEntry(
       title: 'Reading Writing Kids',
       description: 'Read and write with confidence',
-      slug: 'reading-writing-kids',
+      slug: 'reading-writing',
       icon: Icons.menu_book_outlined,
       gradeRangeLabel: 'K-3rd',
       ageOrder: 21,
@@ -115,7 +115,7 @@ class HomePage extends StatelessWidget {
     ProjectEntry(
       title: 'Sight Word Search',
       description: 'Word search and spelling practice',
-      slug: 'sight-word-search',
+      slug: 'sight-word',
       icon: Icons.search_outlined,
       gradeRangeLabel: 'K-5th',
       ageOrder: 22,
@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
   ];
 
   Future<void> _openProject(ProjectEntry entry) async {
-    final uri = Uri.parse('$_projectBaseUrl/${entry.slug}');
+    final uri = Uri.parse('$_projectBaseUrl/${entry.slug}/');
     await _launchUri(uri);
   }
 
