@@ -71,9 +71,9 @@ class HomePage extends StatelessWidget {
       ageOrder: 20,
     ),
     ProjectEntry(
-      title: 'Mahjong',
+      title: 'Tile Match Learning',
       description: 'Fun pattern recognition learning',
-      slug: 'mahjong',
+      slug: 'tile-match',
       icon: Icons.grid_view_rounded,
       gradeRangeLabel: 'PreK-5th',
       ageOrder: 13,
@@ -88,7 +88,8 @@ class HomePage extends StatelessWidget {
     ),
     ProjectEntry(
       title: 'Math Adventures Kids',
-      description: 'Build strong math skills through patterns and problem solving',
+      description:
+          'Build strong math skills through patterns and problem solving',
       slug: 'math-adventures-kids',
       icon: Icons.calculate_outlined,
       gradeRangeLabel: 'PreK-2nd',
@@ -352,14 +353,13 @@ class _ProjectSection extends StatelessWidget {
         : width >= 720
         ? 2
         : 1;
-    final liveProjects = projects
-        .where((ProjectEntry entry) => !entry.isPlaceholder)
-        .toList()
-      ..sort((ProjectEntry a, ProjectEntry b) {
-        final left = a.ageOrder ?? 999;
-        final right = b.ageOrder ?? 999;
-        return left.compareTo(right);
-      });
+    final liveProjects =
+        projects.where((ProjectEntry entry) => !entry.isPlaceholder).toList()
+          ..sort((ProjectEntry a, ProjectEntry b) {
+            final left = a.ageOrder ?? 999;
+            final right = b.ageOrder ?? 999;
+            return left.compareTo(right);
+          });
     final remainder = liveProjects.length % columns;
     final placeholderCount = remainder == 0 ? columns : columns - remainder;
     final displayProjects = <ProjectEntry>[
@@ -470,7 +470,8 @@ class _ProjectCard extends StatelessWidget {
                         size: isCompact ? 26 : 30,
                       ),
                     ),
-                    if (!entry.isPlaceholder && entry.gradeRangeLabel != null) ...<Widget>[
+                    if (!entry.isPlaceholder &&
+                        entry.gradeRangeLabel != null) ...<Widget>[
                       SizedBox(width: isCompact ? 8 : 10),
                       Flexible(
                         child: Align(
@@ -613,7 +614,9 @@ class _PlatformBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mutedForeground = Colors.white.withValues(alpha: 0.62);
-    final badgeForeground = comingSoon ? mutedForeground : foreground.withValues(alpha: 0.92);
+    final badgeForeground = comingSoon
+        ? mutedForeground
+        : foreground.withValues(alpha: 0.92);
     final badgeBackground = comingSoon
         ? const Color(0xFFF1F4F8)
         : background.withValues(alpha: 0.18);
@@ -625,7 +628,9 @@ class _PlatformBadge extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: badgeBackground,
-            borderRadius: BorderRadius.circular(comingSoon ? height * 0.22 : height * 0.36),
+            borderRadius: BorderRadius.circular(
+              comingSoon ? height * 0.22 : height * 0.36,
+            ),
             border: Border.all(
               color: comingSoon
                   ? const Color(0xFFD7DEE8)
@@ -636,11 +641,7 @@ class _PlatformBadge extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Icon(
-                      icon,
-                      size: iconSize,
-                      color: const Color(0xFF738091),
-                    ),
+                    Icon(icon, size: iconSize, color: const Color(0xFF738091)),
                     SizedBox(height: height * 0.08),
                     Text(
                       'Coming soon',
@@ -657,11 +658,7 @@ class _PlatformBadge extends StatelessWidget {
                   ],
                 )
               : Center(
-                  child: Icon(
-                    icon,
-                    size: iconSize,
-                    color: badgeForeground,
-                  ),
+                  child: Icon(icon, size: iconSize, color: badgeForeground),
                 ),
         ),
       ),
@@ -877,9 +874,9 @@ class _ContactChip extends StatelessWidget {
             Text(
               value,
               style: TextStyle(
-                color: const Color(0xFFD4DCEA).withValues(
-                  alpha: disabled ? 0.82 : 1,
-                ),
+                color: const Color(
+                  0xFFD4DCEA,
+                ).withValues(alpha: disabled ? 0.82 : 1),
                 fontWeight: FontWeight.w700,
                 fontSize: 12.5,
               ),
