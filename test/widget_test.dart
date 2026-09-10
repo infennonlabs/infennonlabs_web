@@ -1,8 +1,20 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:infennon_labs_home/main.dart';
 
 void main() {
+  Future<void> pumpAtSize(
+    WidgetTester tester, {
+    required Size size,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(const InfennonLabsApp());
+  }
+
   testWidgets('homepage renders project hub', (WidgetTester tester) async {
     await tester.pumpWidget(const InfennonLabsApp());
 
@@ -16,5 +28,31 @@ void main() {
     );
     expect(find.text('Contact'), findsOneWidget);
     expect(find.text('Alpha Kids'), findsOneWidget);
+  });
+
+  testWidgets('mobile tiles use compact one-column ratio', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(390, 844));
+
+    final grid = tester.widget<GridView>(find.byType(GridView).first);
+    final delegate =
+        grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+
+    expect(delegate.crossAxisCount, 1);
+    expect(delegate.childAspectRatio, closeTo(0.98, 0.001));
+  });
+
+  testWidgets('very narrow mobile keeps readable compact ratio', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(360, 800));
+
+    final grid = tester.widget<GridView>(find.byType(GridView).first);
+    final delegate =
+        grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
+
+    expect(delegate.crossAxisCount, 1);
+    expect(delegate.childAspectRatio, closeTo(0.92, 0.001));
   });
 }

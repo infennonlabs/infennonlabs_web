@@ -374,11 +374,13 @@ class _ProjectSection extends StatelessWidget {
           isPlaceholder: true,
         ),
     ];
-    final aspectRatio = columns == 1
-        ? 0.84
-        : columns == 2
-        ? 1.14
-        : 1.35;
+    final aspectRatio = switch (columns) {
+      1 when width < 380 => 0.92,
+      1 when width < 520 => 0.98,
+      1 => 1.08,
+      2 => 1.14,
+      _ => 1.35,
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -855,7 +857,7 @@ class _ContactChip extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Icon(
               icon,
@@ -863,22 +865,33 @@ class _ContactChip extends StatelessWidget {
               color: Colors.white.withValues(alpha: disabled ? 0.7 : 1),
             ),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: disabled ? 0.76 : 1),
-                fontWeight: FontWeight.w800,
+            Flexible(
+              flex: 3,
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: disabled ? 0.76 : 1),
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
             const SizedBox(width: 8),
-            Text(
-              value,
-              style: TextStyle(
-                color: const Color(
-                  0xFFD4DCEA,
-                ).withValues(alpha: disabled ? 0.82 : 1),
-                fontWeight: FontWeight.w700,
-                fontSize: 12.5,
+            Flexible(
+              flex: 5,
+              child: Text(
+                value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  color: const Color(
+                    0xFFD4DCEA,
+                  ).withValues(alpha: disabled ? 0.82 : 1),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12.5,
+                ),
               ),
             ),
           ],
