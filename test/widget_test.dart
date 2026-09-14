@@ -4,10 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:infennon_labs_home/main.dart';
 
 void main() {
-  Future<void> pumpAtSize(
-    WidgetTester tester, {
-    required Size size,
-  }) async {
+  Future<void> pumpAtSize(WidgetTester tester, {required Size size}) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -30,7 +27,7 @@ void main() {
     expect(find.text('Alpha Kids'), findsOneWidget);
   });
 
-  testWidgets('mobile tiles use compact one-column ratio', (
+  testWidgets('mobile tiles scale compactly with available width', (
     WidgetTester tester,
   ) async {
     await pumpAtSize(tester, size: const Size(390, 844));

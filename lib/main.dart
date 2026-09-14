@@ -763,9 +763,9 @@ class _ContactSection extends StatelessWidget {
                   ),
                   chip(
                     Icons.volunteer_activism_outlined,
-                    'Donate Here',
-                    'Future link coming',
-                    null,
+                    'Donate Here:',
+                    'GoFundMe',
+                    () => _launchUri(Uri.parse('https://gofund.me/5b62c3b83')),
                   ),
                 ],
               );
@@ -889,7 +889,7 @@ class _ContactChip extends StatelessWidget {
                   color: const Color(
                     0xFFD4DCEA,
                   ).withValues(alpha: disabled ? 0.82 : 1),
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   fontSize: 12.5,
                 ),
               ),
