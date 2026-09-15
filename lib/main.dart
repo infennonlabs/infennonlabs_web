@@ -170,16 +170,16 @@ double projectCardAspectRatioForWidth(double width) {
 
   if (columns == 1) {
     final normalized = ((width - 320) / 200).clamp(0.0, 1.0);
-    return 1.12 + (normalized * 0.10);
+    return 1.28 + (normalized * 0.12);
   }
 
   if (columns == 2) {
     final normalized = ((width - 720) / 360).clamp(0.0, 1.0);
-    return 1.20 + (normalized * 0.08);
+    return 1.28 + (normalized * 0.10);
   }
 
   final normalized = ((width - 1120) / 320).clamp(0.0, 1.0);
-  return 1.32 + (normalized * 0.08);
+  return 1.36 + (normalized * 0.08);
 }
 
 class ProjectEntry {
@@ -464,7 +464,12 @@ class _ProjectCard extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: EdgeInsets.all(isCompact ? 16 : 20),
+            padding: EdgeInsets.fromLTRB(
+              isCompact ? 16 : 20,
+              isCompact ? 16 : 20,
+              isCompact ? 16 : 20,
+              isCompact ? 12 : 18,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -527,7 +532,7 @@ class _ProjectCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: isCompact ? 14 : 18),
+                SizedBox(height: isCompact ? 12 : 18),
                 Text(
                   entry.title,
                   style: TextStyle(
@@ -537,7 +542,7 @@ class _ProjectCard extends StatelessWidget {
                     height: 1.05,
                   ),
                 ),
-                SizedBox(height: isCompact ? 6 : 10),
+                SizedBox(height: isCompact ? 5 : 10),
                 Text(
                   entry.description,
                   style: TextStyle(
@@ -547,7 +552,7 @@ class _ProjectCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: isCompact ? 14 : 22),
+                SizedBox(height: isCompact ? 10 : 20),
                 LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     final badgeGap = isCompact ? 8.0 : 10.0;
