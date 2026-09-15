@@ -161,6 +161,27 @@ class HomePage extends StatelessWidget {
   }
 }
 
+double projectCardAspectRatioForWidth(double width) {
+  final columns = width >= 1120
+      ? 3
+      : width >= 720
+      ? 2
+      : 1;
+
+  if (columns == 1) {
+    final normalized = ((width - 320) / 200).clamp(0.0, 1.0);
+    return 1.12 + (normalized * 0.10);
+  }
+
+  if (columns == 2) {
+    final normalized = ((width - 720) / 360).clamp(0.0, 1.0);
+    return 1.20 + (normalized * 0.08);
+  }
+
+  final normalized = ((width - 1120) / 320).clamp(0.0, 1.0);
+  return 1.32 + (normalized * 0.08);
+}
+
 class ProjectEntry {
   const ProjectEntry({
     required this.title,
@@ -374,13 +395,7 @@ class _ProjectSection extends StatelessWidget {
           isPlaceholder: true,
         ),
     ];
-    final aspectRatio = switch (columns) {
-      1 when width < 380 => 0.92,
-      1 when width < 520 => 0.98,
-      1 => 1.08,
-      2 => 1.14,
-      _ => 1.35,
-    };
+    final aspectRatio = projectCardAspectRatioForWidth(width);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -37,10 +37,10 @@ void main() {
         grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
 
     expect(delegate.crossAxisCount, 1);
-    expect(delegate.childAspectRatio, closeTo(0.98, 0.001));
+    expect(delegate.childAspectRatio, closeTo(1.155, 0.001));
   });
 
-  testWidgets('very narrow mobile keeps readable compact ratio', (
+  testWidgets('very narrow mobile keeps a tighter compact aspect ratio', (
     WidgetTester tester,
   ) async {
     await pumpAtSize(tester, size: const Size(360, 800));
@@ -50,6 +50,12 @@ void main() {
         grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
 
     expect(delegate.crossAxisCount, 1);
-    expect(delegate.childAspectRatio, closeTo(0.92, 0.001));
+    expect(delegate.childAspectRatio, closeTo(1.14, 0.001));
+  });
+
+  test('aspect ratio scales with width', () {
+    expect(projectCardAspectRatioForWidth(320), closeTo(1.12, 0.001));
+    expect(projectCardAspectRatioForWidth(390), closeTo(1.155, 0.001));
+    expect(projectCardAspectRatioForWidth(520), closeTo(1.22, 0.001));
   });
 }
