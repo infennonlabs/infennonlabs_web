@@ -442,6 +442,12 @@ class _ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCompact = MediaQuery.sizeOf(context).width < 420;
+    final descriptionStyle = TextStyle(
+      color: palette.foreground.withValues(alpha: 0.92),
+      fontSize: isCompact ? 13.5 : 15.5,
+      height: 1.35,
+      fontWeight: FontWeight.w500,
+    );
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -463,150 +469,153 @@ class _ProjectCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              isCompact ? 16 : 20,
-              isCompact ? 16 : 20,
-              isCompact ? 16 : 20,
-              isCompact ? 12 : 18,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              final horizontalPadding = isCompact ? 16.0 : 20.0;
+              final verticalPadding = isCompact ? 12.0 : 18.0;
+              final titleStyle = TextStyle(
+                color: palette.foreground,
+                fontSize: isCompact ? 20 : 24,
+                fontWeight: FontWeight.w900,
+                height: 1.05,
+              );
+
+              return Padding(
+                padding: EdgeInsets.fromLTRB(
+                  horizontalPadding,
+                  verticalPadding,
+                  horizontalPadding,
+                  isCompact ? 12 : 18,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      width: isCompact ? 44 : 52,
-                      height: isCompact ? 44 : 52,
-                      decoration: BoxDecoration(
-                        color: palette.effectiveIconBackground,
-                        borderRadius: BorderRadius.circular(
-                          isCompact ? 14 : 16,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: isCompact ? 44 : 52,
+                          height: isCompact ? 44 : 52,
+                          decoration: BoxDecoration(
+                            color: palette.effectiveIconBackground,
+                            borderRadius: BorderRadius.circular(
+                              isCompact ? 14 : 16,
+                            ),
+                          ),
+                          child: Icon(
+                            entry.icon,
+                            color: palette.foreground,
+                            size: isCompact ? 26 : 30,
+                          ),
                         ),
-                      ),
-                      child: Icon(
-                        entry.icon,
-                        color: palette.foreground,
-                        size: isCompact ? 26 : 30,
-                      ),
-                    ),
-                    if (!entry.isPlaceholder &&
-                        entry.gradeRangeLabel != null) ...<Widget>[
-                      SizedBox(width: isCompact ? 8 : 10),
-                      Flexible(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isCompact ? 10 : 12,
-                              vertical: isCompact ? 5 : 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.92),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(
-                              entry.gradeRangeLabel!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: const Color(0xFF1E293B),
-                                fontWeight: FontWeight.w900,
-                                fontSize: isCompact ? 12 : 13,
-                                height: 1,
-                                letterSpacing: 0.1,
+                        if (!entry.isPlaceholder &&
+                            entry.gradeRangeLabel != null) ...<Widget>[
+                          SizedBox(width: isCompact ? 8 : 10),
+                          Flexible(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isCompact ? 10 : 12,
+                                  vertical: isCompact ? 5 : 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.92),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Text(
+                                  entry.gradeRangeLabel!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: const Color(0xFF1E293B),
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: isCompact ? 12 : 13,
+                                    height: 1,
+                                    letterSpacing: 0.1,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
+                        ],
+                        const Spacer(),
+                        if (!entry.isPlaceholder)
+                          Icon(
+                            Icons.open_in_new_rounded,
+                            color: palette.foreground.withValues(alpha: 0.9),
+                            size: isCompact ? 18 : 20,
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: isCompact ? 12 : 18),
+                    Text(
+                      entry.title,
+                      style: titleStyle,
+                    ),
+                    SizedBox(height: isCompact ? 5 : 10),
+                    Text(
+                      entry.description,
+                      style: descriptionStyle,
+                    ),
                     const Spacer(),
-                    if (!entry.isPlaceholder)
-                      Icon(
-                        Icons.open_in_new_rounded,
-                        color: palette.foreground.withValues(alpha: 0.9),
-                        size: isCompact ? 18 : 20,
-                      ),
+                    LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        final badgeGap = isCompact ? 8.0 : 10.0;
+                        final availableWidth = constraints.maxWidth;
+                        final badgeWidth = (availableWidth - (badgeGap * 2)) / 3;
+                        final badgeHeight = badgeWidth.clamp(
+                          isCompact ? 34.0 : 38.0,
+                          isCompact ? 48.0 : 54.0,
+                        );
+                        final iconSize = (badgeHeight * 0.44).clamp(16.0, 22.0);
+
+                        return Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: _PlatformBadge(
+                                icon: Icons.desktop_windows_rounded,
+                                label: 'Desktop/Web',
+                                foreground: palette.foreground,
+                                background: palette.effectiveIconBackground,
+                                height: badgeHeight,
+                                iconSize: iconSize,
+                                comingSoon: entry.isPlaceholder,
+                              ),
+                            ),
+                            SizedBox(width: badgeGap),
+                            Expanded(
+                              child: _PlatformBadge(
+                                icon: Icons.apple,
+                                label: 'iOS',
+                                foreground: palette.foreground,
+                                background: palette.effectiveIconBackground,
+                                height: badgeHeight,
+                                iconSize: iconSize,
+                                comingSoon: true,
+                              ),
+                            ),
+                            SizedBox(width: badgeGap),
+                            Expanded(
+                              child: _PlatformBadge(
+                                icon: Icons.android_rounded,
+                                label: 'Android',
+                                foreground: palette.foreground,
+                                background: palette.effectiveIconBackground,
+                                height: badgeHeight,
+                                iconSize: iconSize,
+                                comingSoon: true,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
-                SizedBox(height: isCompact ? 12 : 18),
-                Text(
-                  entry.title,
-                  style: TextStyle(
-                    color: palette.foreground,
-                    fontSize: isCompact ? 20 : 24,
-                    fontWeight: FontWeight.w900,
-                    height: 1.05,
-                  ),
-                ),
-                SizedBox(height: isCompact ? 5 : 10),
-                Text(
-                  entry.description,
-                  style: TextStyle(
-                    color: palette.foreground.withValues(alpha: 0.92),
-                    fontSize: isCompact ? 13.5 : 15.5,
-                    height: 1.35,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: isCompact ? 10 : 20),
-                LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints constraints) {
-                    final badgeGap = isCompact ? 8.0 : 10.0;
-                    final availableWidth = constraints.maxWidth;
-                    final badgeWidth = (availableWidth - (badgeGap * 2)) / 3;
-                    final badgeHeight = badgeWidth.clamp(
-                      isCompact ? 34.0 : 38.0,
-                      isCompact ? 48.0 : 54.0,
-                    );
-                    final iconSize = (badgeHeight * 0.44).clamp(16.0, 22.0);
-
-                    return Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: _PlatformBadge(
-                            icon: Icons.desktop_windows_rounded,
-                            label: 'Desktop/Web',
-                            foreground: palette.foreground,
-                            background: palette.effectiveIconBackground,
-                            height: badgeHeight,
-                            iconSize: iconSize,
-                            comingSoon: entry.isPlaceholder,
-                          ),
-                        ),
-                        SizedBox(width: badgeGap),
-                        Expanded(
-                          child: _PlatformBadge(
-                            icon: Icons.apple,
-                            label: 'iOS',
-                            foreground: palette.foreground,
-                            background: palette.effectiveIconBackground,
-                            height: badgeHeight,
-                            iconSize: iconSize,
-                            comingSoon: true,
-                          ),
-                        ),
-                        SizedBox(width: badgeGap),
-                        Expanded(
-                          child: _PlatformBadge(
-                            icon: Icons.android_rounded,
-                            label: 'Android',
-                            foreground: palette.foreground,
-                            background: palette.effectiveIconBackground,
-                            height: badgeHeight,
-                            iconSize: iconSize,
-                            comingSoon: true,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),
