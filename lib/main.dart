@@ -550,67 +550,66 @@ class _ProjectCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: isCompact ? 12 : 18),
-                    Text(
-                      entry.title,
-                      style: titleStyle,
-                    ),
+                    Text(entry.title, style: titleStyle),
                     SizedBox(height: isCompact ? 5 : 10),
-                    Text(
-                      entry.description,
-                      style: descriptionStyle,
-                    ),
+                    Text(entry.description, style: descriptionStyle),
                     const Spacer(),
                     LayoutBuilder(
-                      builder: (BuildContext context, BoxConstraints constraints) {
-                        final badgeGap = isCompact ? 8.0 : 10.0;
-                        final availableWidth = constraints.maxWidth;
-                        final badgeWidth = (availableWidth - (badgeGap * 2)) / 3;
-                        final badgeHeight = badgeWidth.clamp(
-                          isCompact ? 34.0 : 38.0,
-                          isCompact ? 48.0 : 54.0,
-                        );
-                        final iconSize = (badgeHeight * 0.44).clamp(16.0, 22.0);
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                            final badgeGap = isCompact ? 8.0 : 10.0;
+                            final availableWidth = constraints.maxWidth;
+                            final badgeWidth =
+                                (availableWidth - (badgeGap * 2)) / 3;
+                            final badgeHeight = badgeWidth.clamp(
+                              isCompact ? 34.0 : 38.0,
+                              isCompact ? 48.0 : 54.0,
+                            );
+                            final iconSize = (badgeHeight * 0.44).clamp(
+                              16.0,
+                              22.0,
+                            );
 
-                        return Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: _PlatformBadge(
-                                icon: Icons.desktop_windows_rounded,
-                                label: 'Desktop/Web',
-                                foreground: palette.foreground,
-                                background: palette.effectiveIconBackground,
-                                height: badgeHeight,
-                                iconSize: iconSize,
-                                comingSoon: entry.isPlaceholder,
-                              ),
-                            ),
-                            SizedBox(width: badgeGap),
-                            Expanded(
-                              child: _PlatformBadge(
-                                icon: Icons.apple,
-                                label: 'iOS',
-                                foreground: palette.foreground,
-                                background: palette.effectiveIconBackground,
-                                height: badgeHeight,
-                                iconSize: iconSize,
-                                comingSoon: true,
-                              ),
-                            ),
-                            SizedBox(width: badgeGap),
-                            Expanded(
-                              child: _PlatformBadge(
-                                icon: Icons.android_rounded,
-                                label: 'Android',
-                                foreground: palette.foreground,
-                                background: palette.effectiveIconBackground,
-                                height: badgeHeight,
-                                iconSize: iconSize,
-                                comingSoon: true,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                            return Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: _PlatformBadge(
+                                    icon: Icons.desktop_windows_rounded,
+                                    label: 'Desktop/Web',
+                                    foreground: palette.foreground,
+                                    background: palette.effectiveIconBackground,
+                                    height: badgeHeight,
+                                    iconSize: iconSize,
+                                    comingSoon: entry.isPlaceholder,
+                                  ),
+                                ),
+                                SizedBox(width: badgeGap),
+                                Expanded(
+                                  child: _PlatformBadge(
+                                    icon: Icons.apple,
+                                    label: 'iOS',
+                                    foreground: palette.foreground,
+                                    background: palette.effectiveIconBackground,
+                                    height: badgeHeight,
+                                    iconSize: iconSize,
+                                    comingSoon: true,
+                                  ),
+                                ),
+                                SizedBox(width: badgeGap),
+                                Expanded(
+                                  child: _PlatformBadge(
+                                    icon: Icons.android_rounded,
+                                    label: 'Android',
+                                    foreground: palette.foreground,
+                                    background: palette.effectiveIconBackground,
+                                    height: badgeHeight,
+                                    iconSize: iconSize,
+                                    comingSoon: true,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                     ),
                   ],
                 ),
