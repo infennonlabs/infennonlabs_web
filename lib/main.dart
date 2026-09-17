@@ -120,6 +120,22 @@ class HomePage extends StatelessWidget {
       gradeRangeLabel: 'K-5th',
       ageOrder: 22,
     ),
+    ProjectEntry(
+      title: 'Chem Kids',
+      description: 'Chemistry exploration and periodic table learning',
+      slug: 'chemistry',
+      icon: Icons.science_outlined,
+      gradeRangeLabel: 'K-5th',
+      ageOrder: 23,
+    ),
+    ProjectEntry(
+      title: 'Countin Kids',
+      description: 'Learn counting through playful number activities',
+      slug: 'counting',
+      icon: Icons.numbers_outlined,
+      gradeRangeLabel: 'PreK-2nd',
+      ageOrder: 9,
+    ),
   ];
 
   Future<void> _openProject(ProjectEntry entry) async {
