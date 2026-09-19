@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mode_selection_shared/mode_selection_shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'project_registry.dart';
+
 Future<void> _launchUri(Uri uri) async {
   await launchUrl(
     uri,
-    mode: LaunchMode.externalApplication,
-    webOnlyWindowName: '_blank',
+    mode: LaunchMode.platformDefault,
+    webOnlyWindowName: '_self',
   );
 }
 
@@ -53,91 +55,6 @@ class HomePage extends StatelessWidget {
 
   static const String _projectBaseUrl = 'https://infennonlabs.com';
 
-  static final List<ProjectEntry> _projects = <ProjectEntry>[
-    ProjectEntry(
-      title: 'Alpha Kids',
-      description: 'Emphasis on the alphabet and associated words and sounds',
-      slug: 'alpha-kids',
-      icon: Icons.abc,
-      gradeRangeLabel: 'Early-PreK',
-      ageOrder: 0,
-    ),
-    ProjectEntry(
-      title: 'Does It Solve',
-      description: 'Simple math logical thinking',
-      slug: 'does-it-solve',
-      icon: Icons.extension_outlined,
-      gradeRangeLabel: 'K-1st',
-      ageOrder: 20,
-    ),
-    ProjectEntry(
-      title: 'Tile Match Learning',
-      description: 'Fun pattern recognition learning',
-      slug: 'tile-match',
-      icon: Icons.grid_view_rounded,
-      gradeRangeLabel: 'PreK-5th',
-      ageOrder: 13,
-    ),
-    ProjectEntry(
-      title: 'Make It',
-      description: 'Critical thinking and spelling through recipe creations',
-      slug: 'make-it',
-      icon: Icons.build_circle_outlined,
-      gradeRangeLabel: 'PreK-2nd',
-      ageOrder: 10,
-    ),
-    ProjectEntry(
-      title: 'Math Adventures Kids',
-      description:
-          'Build strong math skills through patterns and problem solving',
-      slug: 'math-adventure',
-      icon: Icons.calculate_outlined,
-      gradeRangeLabel: 'PreK-2nd',
-      ageOrder: 11,
-    ),
-    ProjectEntry(
-      title: 'Memory Match',
-      description:
-          'Card-flip memory games designed for recognition and recall.',
-      slug: 'memory-match',
-      icon: Icons.style_outlined,
-      gradeRangeLabel: 'PreK-2nd',
-      ageOrder: 12,
-    ),
-    ProjectEntry(
-      title: 'Reading Writing Kids',
-      description: 'Read and write with confidence',
-      slug: 'reading-writing',
-      icon: Icons.menu_book_outlined,
-      gradeRangeLabel: 'K-3rd',
-      ageOrder: 21,
-    ),
-    ProjectEntry(
-      title: 'Sight Word Search',
-      description: 'Word search and spelling practice',
-      slug: 'sight-word',
-      icon: Icons.search_outlined,
-      gradeRangeLabel: 'K-5th',
-      ageOrder: 22,
-    ),
-      ProjectEntry(
-        title: 'Chem Kids',
-        description: 'Chemistry exploration and periodic table learning',
-        slug: 'chemistry',
-        icon: Icons.science_outlined,
-        gradeRangeLabel: '5th',
-        ageOrder: 23,
-      ),
-    ProjectEntry(
-      title: 'Countin Kids',
-      description: 'Learn counting through playful number activities',
-      slug: 'counting',
-      icon: Icons.numbers_outlined,
-      gradeRangeLabel: 'PreK-K',
-      ageOrder: 9,
-    ),
-  ];
-
   Future<void> _openProject(ProjectEntry entry) async {
     final uri = Uri.parse('$_projectBaseUrl/${entry.slug}/');
     await _launchUri(uri);
@@ -159,7 +76,10 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     const _Header(),
                     SizedBox(height: Responsive.spacing(context, 3)),
-                    _ProjectSection(projects: _projects, onTap: _openProject),
+                    _ProjectSection(
+                      projects: kProjectRegistry,
+                      onTap: _openProject,
+                    ),
                     SizedBox(height: Responsive.spacing(context, 3)),
                     const _AboutSection(),
                     SizedBox(height: Responsive.spacing(context, 3)),
@@ -196,26 +116,6 @@ double projectCardAspectRatioForWidth(double width) {
 
   final normalized = ((width - 1120) / 320).clamp(0.0, 1.0);
   return 1.36 + (normalized * 0.08);
-}
-
-class ProjectEntry {
-  const ProjectEntry({
-    required this.title,
-    required this.description,
-    required this.slug,
-    required this.icon,
-    this.gradeRangeLabel,
-    this.ageOrder,
-    this.isPlaceholder = false,
-  });
-
-  final String title;
-  final String description;
-  final String slug;
-  final IconData icon;
-  final String? gradeRangeLabel;
-  final int? ageOrder;
-  final bool isPlaceholder;
 }
 
 class _NoScrollbarBehavior extends MaterialScrollBehavior {
@@ -403,6 +303,7 @@ class _ProjectSection extends StatelessWidget {
       ...liveProjects,
       for (var i = 0; i < placeholderCount; i++)
         ProjectEntry(
+          id: '__coming-soon-$i',
           title: 'More Games Soon',
           description:
               'New learning games are on the way. Check back for future launches.',
@@ -559,7 +460,7 @@ class _ProjectCard extends StatelessWidget {
                         const Spacer(),
                         if (!entry.isPlaceholder)
                           Icon(
-                            Icons.open_in_new_rounded,
+                            Icons.arrow_forward_rounded,
                             color: palette.foreground.withValues(alpha: 0.9),
                             size: isCompact ? 18 : 20,
                           ),
