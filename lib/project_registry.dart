@@ -103,7 +103,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'chemistry',
     icon: Icons.science_outlined,
     gradeRangeLabel: '5th',
-    ageOrder: 23,
+    ageOrder: 999,
   ),
   ProjectEntry(
     id: 'countin_kids',
@@ -122,14 +122,5 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.filter_9_plus_outlined,
     gradeRangeLabel: '2nd-5th',
     ageOrder: 24,
-  ),
-  ProjectEntry(
-    id: 'unicorn',
-    title: 'Unicorn',
-    description: 'Experimental learning game concepts and prototypes.',
-    slug: 'unicorn',
-    icon: Icons.auto_fix_high_outlined,
-    gradeRangeLabel: 'Labs',
-    ageOrder: 25,
   ),
 ];
