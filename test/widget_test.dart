@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:infennon_labs_home/main.dart';
+import 'package:infennon_labs_home/project_registry.dart';
 
 void main() {
   Future<void> pumpAtSize(WidgetTester tester, {required Size size}) async {
@@ -25,6 +26,19 @@ void main() {
     );
     expect(find.text('Contact'), findsOneWidget);
     expect(find.text('Alpha Kids'), findsOneWidget);
+    expect(find.text('Play Now'), findsWidgets);
+  });
+
+  test('home registry marks Math Solitaire as non-live and uses K-1st label', () {
+    final mathAdventures = kProjectRegistry.firstWhere(
+      (ProjectEntry entry) => entry.id == 'math_adventures_kids',
+    );
+    expect(mathAdventures.gradeRangeLabel, 'K-1st');
+
+    final mathSolitaire = kProjectRegistry.firstWhere(
+      (ProjectEntry entry) => entry.id == 'math_solitaire_kids',
+    );
+    expect(mathSolitaire.isPlaceholder, isTrue);
   });
 
   testWidgets('mobile tiles scale compactly with available width', (

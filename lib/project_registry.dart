@@ -66,7 +66,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
         'Build strong math skills through patterns and problem solving',
     slug: 'math-adventure',
     icon: Icons.calculate_outlined,
-    gradeRangeLabel: 'PreK-2nd',
+    gradeRangeLabel: 'K-1st',
     ageOrder: 11,
   ),
   ProjectEntry(
@@ -122,5 +122,6 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.filter_9_plus_outlined,
     gradeRangeLabel: '2nd-5th',
     ageOrder: 24,
+    isPlaceholder: true,
   ),
 ];

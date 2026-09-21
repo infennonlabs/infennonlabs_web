@@ -50,14 +50,31 @@ class InfennonLabsApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   static const String _projectBaseUrl = 'https://infennonlabs.com';
+  bool _isLoadingProject = false;
 
   Future<void> _openProject(ProjectEntry entry) async {
-    final uri = Uri.parse('$_projectBaseUrl/${entry.slug}/');
-    await _launchUri(uri);
+    if (_isLoadingProject) {
+      return;
+    }
+
+    setState(() => _isLoadingProject = true);
+    try {
+      final uri = Uri.parse('$_projectBaseUrl/${entry.slug}/');
+      await _launchUri(uri);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingProject = false);
+      }
+    }
   }
 
   @override
@@ -91,7 +108,127 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
+          if (_isLoadingProject)
+            Positioned.fill(
+              child: ColoredBox(
+                color: Colors.white.withValues(alpha: 0.58),
+                child: Center(
+                  child: _LoadingBrandCard(
+                    label: 'Loading game…',
+                    compact: MediaQuery.sizeOf(context).width < 440,
+                  ),
+                ),
+              ),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+class _LoadingBrandCard extends StatelessWidget {
+  const _LoadingBrandCard({required this.label, required this.compact});
+
+  final String label;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = const Text(
+      "Let's Get Learning",
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w800,
+        color: Color(0xFF17314D),
+      ),
+    );
+
+    final status = Text(
+      label,
+      style: TextStyle(
+        fontSize: compact ? 11 : 12,
+        fontWeight: FontWeight.w600,
+        color: BrandTheme.ocean,
+      ),
+    );
+
+    final content = compact
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _LoadingIconBadge(),
+              const SizedBox(width: 10),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[title, status],
+              ),
+              const SizedBox(width: 10),
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              ),
+            ],
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              _LoadingIconBadge(),
+              const SizedBox(width: 12),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[title, status],
+              ),
+              const SizedBox(width: 12),
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              ),
+            ],
+          );
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 16 : 20,
+        vertical: compact ? 12 : 14,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: content,
+    );
+  }
+}
+
+class _LoadingIconBadge extends StatelessWidget {
+  const _LoadingIconBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: const LinearGradient(
+          colors: <Color>[BrandTheme.ocean, BrandTheme.sky],
+        ),
+      ),
+      child: const Icon(
+        Icons.auto_stories_rounded,
+        color: Colors.white,
+        size: 22,
       ),
     );
   }
@@ -604,8 +741,24 @@ class _PlatformBadge extends StatelessWidget {
                     ),
                   ],
                 )
-              : Center(
-                  child: Icon(icon, size: iconSize, color: badgeForeground),
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(icon, size: iconSize, color: badgeForeground),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Play Now',
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: badgeForeground,
+                        fontSize: height * 0.18,
+                        fontWeight: FontWeight.w800,
+                        height: 1,
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),
