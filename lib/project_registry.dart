@@ -115,6 +115,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 9,
   ),
   ProjectEntry(
+    id: 'speak_repeat',
+    title: 'Speak Repeat',
+    description: 'Pronoun and speech practice through listen-and-repeat play',
+    slug: 'speak-repeat',
+    icon: Icons.record_voice_over_outlined,
+    gradeRangeLabel: 'PreK-2nd',
+    ageOrder: 23,
+  ),
+  ProjectEntry(
     id: 'math_solitaire_kids',
     title: 'Math Solitaire Kids',
     description: 'Math practice blended with card-style puzzle play.',
