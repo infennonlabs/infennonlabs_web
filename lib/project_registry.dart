@@ -48,7 +48,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'tile-match',
     icon: Icons.grid_view_rounded,
     gradeRangeLabel: 'PreK-5th',
-    ageOrder: 13,
+    ageOrder: 14,
   ),
   ProjectEntry(
     id: 'make_it',
@@ -57,7 +57,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'make-it',
     icon: Icons.build_circle_outlined,
     gradeRangeLabel: 'PreK-2nd',
-    ageOrder: 10,
+    ageOrder: 11,
   ),
   ProjectEntry(
     id: 'math_adventures_kids',
@@ -67,7 +67,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'math-adventure',
     icon: Icons.calculate_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 11,
+    ageOrder: 12,
   ),
   ProjectEntry(
     id: 'memory_match',
@@ -76,7 +76,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'memory-match',
     icon: Icons.style_outlined,
     gradeRangeLabel: 'PreK-2nd',
-    ageOrder: 12,
+    ageOrder: 13,
   ),
   ProjectEntry(
     id: 'reading_writing_kids',
@@ -120,8 +120,8 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     description: 'Pronoun and speech practice through listen-and-repeat play',
     slug: 'speak-repeat',
     icon: Icons.record_voice_over_outlined,
-    gradeRangeLabel: 'PreK-2nd',
-    ageOrder: 23,
+    gradeRangeLabel: 'PreK-3rd',
+    ageOrder: 10,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
