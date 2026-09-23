@@ -94,7 +94,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'sight-word',
     icon: Icons.search_outlined,
     gradeRangeLabel: 'K-5th',
-    ageOrder: 22,
+    ageOrder: 23,
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -130,7 +130,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: 'K-2nd',
-    ageOrder: 23,
+    ageOrder: 22,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
