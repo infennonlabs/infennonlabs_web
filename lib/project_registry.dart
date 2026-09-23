@@ -127,7 +127,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     id: 'word_blend_kids',
     title: 'Word Blend Kids',
     description: 'Word blending and phonics practice',
-    slug: 'word-blend',
+    slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: 'K-2nd',
     ageOrder: 23,
