@@ -39,7 +39,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'does-it-solve',
     icon: Icons.extension_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 20,
+    ageOrder: 14,
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -67,7 +67,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'math-adventure',
     icon: Icons.calculate_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 14,
+    ageOrder: 15,
   ),
   ProjectEntry(
     id: 'memory_match',
