@@ -10,6 +10,8 @@ class ProjectEntry {
     this.gradeRangeLabel,
     this.ageOrder,
     this.isPlaceholder = false,
+    this.channelPolicy = 'both',
+    this.launchUrl,
   });
 
   final String id;
@@ -19,6 +21,8 @@ class ProjectEntry {
   final IconData icon;
   final String? gradeRangeLabel;
   final int? ageOrder;
+  final String channelPolicy;
+  final String? launchUrl;
   final bool isPlaceholder;
 }
 
@@ -141,5 +145,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '2nd-5th',
     ageOrder: 24,
     isPlaceholder: true,
+  ),
+  ProjectEntry(
+    id: 'centralized_package_sandbox',
+    title: 'Centralized Package Sandbox',
+    description: 'Dev-only playground for shared package integration checks',
+    slug: 'centralized-package-sandbox',
+    icon: Icons.science_outlined,
+    gradeRangeLabel: 'Dev',
+    ageOrder: 30,
+    channelPolicy: 'dev',
+    launchUrl: 'https://infennonlabs.com/learning-play/dev/centralized-package-sandbox/',
   ),
 ];

@@ -6,6 +6,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'project_registry.dart';
 
+const String _appBuildChannel = String.fromEnvironment(
+  'APP_BUILD_CHANNEL',
+  defaultValue: 'stable',
+);
+
 Future<void> _launchUri(Uri uri) async {
   await launchUrl(
     uri,
@@ -61,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   static const String _projectBaseUrl = 'https://infennonlabs.com';
 
   Future<void> _openProject(ProjectEntry entry) async {
-    final uri = Uri.parse('$_projectBaseUrl/${entry.slug}/');
+    final uri = Uri.parse(entry.launchUrl ?? '$_projectBaseUrl/${entry.slug}/');
     await _launchUri(uri);
   }
 
@@ -296,7 +301,10 @@ class _ProjectSection extends StatelessWidget {
         ? 2
         : 1;
     final liveProjects =
-        projects.where((ProjectEntry entry) => !entry.isPlaceholder).toList()
+        projects
+            .where((ProjectEntry entry) => !entry.isPlaceholder)
+            .where(_isVisibleOnCurrentChannel)
+            .toList()
           ..sort((ProjectEntry a, ProjectEntry b) {
             final left = a.ageOrder ?? 999;
             final right = b.ageOrder ?? 999;
@@ -347,6 +355,13 @@ class _ProjectSection extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  bool _isVisibleOnCurrentChannel(ProjectEntry entry) {
+    if (entry.channelPolicy == 'dev') {
+      return _appBuildChannel == 'dev';
+    }
+    return true;
   }
 }
 
