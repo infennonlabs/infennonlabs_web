@@ -146,15 +146,4 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 24,
     isPlaceholder: true,
   ),
-  ProjectEntry(
-    id: 'centralized_package_sandbox',
-    title: 'Centralized Package Sandbox',
-    description: 'Dev-only playground for shared package integration checks',
-    slug: 'centralized-package-sandbox',
-    icon: Icons.science_outlined,
-    gradeRangeLabel: 'Dev',
-    ageOrder: 30,
-    channelPolicy: 'dev',
-    launchUrl: 'https://infennonlabs.com/learning-play/dev/centralized-package-sandbox/',
-  ),
 ];
