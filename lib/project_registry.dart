@@ -137,6 +137,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 2,
   ),
   ProjectEntry(
+    id: 'grammar_adventures_kids',
+    title: 'Grammar Adventures Kids',
+    description: 'Grammar and sentence skills through playful challenges',
+    slug: 'grammar',
+    icon: Icons.auto_stories_outlined,
+    gradeRangeLabel: 'K-3rd',
+    ageOrder: 21,
+  ),
+  ProjectEntry(
     id: 'word_blend_kids',
     title: 'Word Blend Kids',
     description: 'Word blending and phonics practice',
