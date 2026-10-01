@@ -142,7 +142,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     description: 'Grammar and sentence skills through playful challenges',
     slug: 'grammar',
     icon: Icons.auto_stories_outlined,
-    gradeRangeLabel: 'K-3rd',
+    gradeRangeLabel: 'K-2nd',
     ageOrder: 21,
   ),
   ProjectEntry(
