@@ -229,16 +229,31 @@ class _Header extends StatelessWidget {
         SizedBox(height: Responsive.spacing(context, 0.9)),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 760),
-          child: Text(
-            'InfennonLabs',
-            style: TextStyle(
-              fontFamily: GoogleFonts.fredoka().fontFamily,
-              fontSize: isCompact ? 38 : 58,
-              height: 0.96,
-              fontWeight: FontWeight.w900,
-              letterSpacing: -1.4,
-              color: BrandTheme.ink,
-            ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Flexible(
+                child: Text(
+                  'InfennonLabs',
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.fredoka().fontFamily,
+                    fontSize: isCompact ? 38 : 58,
+                    height: 0.96,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -1.4,
+                    color: BrandTheme.ink,
+                  ),
+                ),
+              ),
+              SizedBox(width: isCompact ? 10 : 16),
+              Image.asset(
+                'assets/images/infennon_logo.png',
+                width: isCompact ? 56 : 88,
+                height: isCompact ? 56 : 88,
+                semanticLabel: 'InfennonLabs logo',
+              ),
+            ],
           ),
         ),
         SizedBox(height: Responsive.spacing(context, 0.7)),

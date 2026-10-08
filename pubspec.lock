@@ -104,6 +104,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  game_nav_shared:
+    dependency: transitive
+    description:
+      path: "../.workspace-copilot/packages/game_nav_shared"
+      relative: true
+    source: path
+    version: "0.1.0"
   game_settings_shared:
     dependency: "direct main"
     description:
