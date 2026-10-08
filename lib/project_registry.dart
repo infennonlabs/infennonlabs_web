@@ -159,9 +159,19 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     title: 'Pumpkin Carving',
     description: 'Carve a pumpkin by finger, then light it up for the night',
     slug: 'pumpkin-carving',
-    icon: Icons.local_fire_department_outlined,
+    icon: Icons.sentiment_very_satisfied_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1000,
+  ),
+  ProjectEntry(
+    id: 'piano_synth_demo',
+    title: 'Piano Practice',
+    description:
+        'Play piano by ear with songs, chords, and matching music symbols',
+    slug: 'piano',
+    icon: Icons.piano,
+    gradeRangeLabel: 'All',
+    ageOrder: 1001,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
