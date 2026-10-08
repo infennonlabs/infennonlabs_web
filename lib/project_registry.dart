@@ -155,6 +155,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 22,
   ),
   ProjectEntry(
+    id: 'pumpkin_carver',
+    title: 'Pumpkin Carving',
+    description: 'Carve a pumpkin by finger, then light it up for the night',
+    slug: 'pumpkin-carving',
+    icon: Icons.local_fire_department_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1000,
+  ),
+  ProjectEntry(
     id: 'math_solitaire_kids',
     title: 'Math Solitaire Kids',
     description: 'Math practice blended with card-style puzzle play.',
