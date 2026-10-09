@@ -46,6 +46,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1,
   ),
   ProjectEntry(
+    id: 'emergency_kids',
+    title: 'Emergency Kids',
+    description: 'Learn what to do in an emergency through guided practice',
+    slug: 'emergency-response',
+    icon: Icons.health_and_safety_outlined,
+    gradeRangeLabel: 'Early-PreK',
+    ageOrder: 2,
+  ),
+  ProjectEntry(
     id: 'does_it_solve',
     title: 'Does It Solve',
     description: 'Simple math logical thinking',
@@ -134,7 +143,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'speak-repeat',
     icon: Icons.record_voice_over_outlined,
     gradeRangeLabel: 'Early-PreK',
-    ageOrder: 2,
+    ageOrder: 3,
   ),
   ProjectEntry(
     id: 'grammar_adventures_kids',
