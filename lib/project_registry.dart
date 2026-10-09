@@ -183,6 +183,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1001,
   ),
   ProjectEntry(
+    id: 'cooking_kids',
+    title: 'Cooking Kids',
+    description:
+        'Cook up reading, spelling, and math with ingredients and recipes',
+    slug: 'cooking',
+    icon: Icons.restaurant_menu_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1002,
+  ),
+  ProjectEntry(
     id: 'math_solitaire_kids',
     title: 'Math Solitaire Kids',
     description: 'Math practice blended with card-style puzzle play.',
