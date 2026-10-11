@@ -94,7 +94,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
   ProjectEntry(
     id: 'memory_match',
     title: 'Memory Match',
-    description: 'Card-flip memory games designed for recognition and recall.',
+    description: 'Card-flip memory games designed for recognition and recall',
     slug: 'memory-match',
     icon: Icons.style_outlined,
     gradeRangeLabel: 'PreK-2nd',
@@ -157,7 +157,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
   ProjectEntry(
     id: 'word_blend_kids',
     title: 'Word Blend Kids',
-    description: 'Word blending and phonics practice',
+    description: 'Build and match word joiners',
     slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: 'K-2nd',
