@@ -61,7 +61,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'does-it-solve',
     icon: Icons.extension_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 15,
+    ageOrder: 16,
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -70,7 +70,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'tile-match',
     icon: Icons.grid_view_rounded,
     gradeRangeLabel: 'PreK-5th',
-    ageOrder: 14,
+    ageOrder: 15,
   ),
   ProjectEntry(
     id: 'make_it',
@@ -89,7 +89,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'math-adventure',
     icon: Icons.calculate_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 16,
+    ageOrder: 17,
   ),
   ProjectEntry(
     id: 'memory_match',
@@ -107,7 +107,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'reading-writing',
     icon: Icons.menu_book_outlined,
     gradeRangeLabel: 'K-3rd',
-    ageOrder: 23,
+    ageOrder: 24,
   ),
   ProjectEntry(
     id: 'sight_word_search',
@@ -116,7 +116,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'sight-word',
     icon: Icons.search_outlined,
     gradeRangeLabel: 'K-5th',
-    ageOrder: 24,
+    ageOrder: 25,
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -152,7 +152,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'grammar',
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'K-2nd',
-    ageOrder: 21,
+    ageOrder: 22,
   ),
   ProjectEntry(
     id: 'word_blend_kids',
@@ -161,7 +161,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: 'K-2nd',
-    ageOrder: 22,
+    ageOrder: 23,
   ),
   ProjectEntry(
     id: 'pumpkin_carver',
@@ -211,13 +211,22 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 13,
   ),
   ProjectEntry(
+    id: 'clockwork',
+    title: 'Clockwork',
+    description: 'Learn the parts of a clock and practice telling time',
+    slug: 'clockwork',
+    icon: Icons.schedule_outlined,
+    gradeRangeLabel: '1st-3rd',
+    ageOrder: 14,
+  ),
+  ProjectEntry(
     id: 'math_solitaire_kids',
     title: 'Math Solitaire Kids',
     description: 'Math practice blended with card-style puzzle play.',
     slug: 'math-solitaire-kids',
     icon: Icons.filter_9_plus_outlined,
     gradeRangeLabel: '2nd-5th',
-    ageOrder: 24,
+    ageOrder: 25,
     isPlaceholder: true,
   ),
 ];
