@@ -202,6 +202,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1003,
   ),
   ProjectEntry(
+    id: 'anatomy_kids',
+    title: 'Anatomy Kids',
+    description:
+        'Peel back the body from skin to skeleton and learn about every part',
+    slug: 'anatomy',
+    icon: Icons.accessibility_new_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1004,
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
