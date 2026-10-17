@@ -61,7 +61,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'does-it-solve',
     icon: Icons.extension_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 16,
+    ageOrder: 14,
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -70,7 +70,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'tile-match',
     icon: Icons.grid_view_rounded,
     gradeRangeLabel: 'PreK-5th',
-    ageOrder: 15,
+    ageOrder: 13,
   ),
   ProjectEntry(
     id: 'make_it',
@@ -107,7 +107,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'reading-writing',
     icon: Icons.menu_book_outlined,
     gradeRangeLabel: 'K-3rd',
-    ageOrder: 24,
+    ageOrder: 16,
   ),
   ProjectEntry(
     id: 'sight_word_search',
@@ -116,7 +116,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'sight-word',
     icon: Icons.search_outlined,
     gradeRangeLabel: 'K-5th',
-    ageOrder: 25,
+    ageOrder: 18,
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -152,7 +152,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'grammar',
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'K-2nd',
-    ageOrder: 22,
+    ageOrder: 15,
   ),
   ProjectEntry(
     id: 'word_blend_kids',
@@ -161,7 +161,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 23,
+    ageOrder: 21,
   ),
   ProjectEntry(
     id: 'pumpkin_carver',
@@ -218,7 +218,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'make-change',
     icon: Icons.price_change_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 13,
+    ageOrder: 19,
   ),
   ProjectEntry(
     id: 'clockwork',
@@ -227,7 +227,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'clockwork',
     icon: Icons.schedule_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 14,
+    ageOrder: 20,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
