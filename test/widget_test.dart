@@ -29,11 +29,11 @@ void main() {
     expect(find.text('Play Now'), findsWidgets);
   });
 
-  test('home registry marks Math Solitaire as non-live and uses K-1st label', () {
+  test('home registry marks Math Solitaire as non-live and uses K-3rd label', () {
     final mathAdventures = kProjectRegistry.firstWhere(
       (ProjectEntry entry) => entry.id == 'math_adventures_kids',
     );
-    expect(mathAdventures.gradeRangeLabel, 'K-1st');
+    expect(mathAdventures.gradeRangeLabel, 'K-3rd');
 
     final mathSolitaire = kProjectRegistry.firstWhere(
       (ProjectEntry entry) => entry.id == 'math_solitaire_kids',

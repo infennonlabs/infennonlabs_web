@@ -348,6 +348,7 @@ class _ProjectSection extends StatelessWidget {
         GridView.builder(
           itemCount: displayProjects.length,
           shrinkWrap: true,
+          clipBehavior: Clip.none,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: columns,
