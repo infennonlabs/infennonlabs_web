@@ -401,27 +401,29 @@ class _ProjectCard extends StatelessWidget {
       height: 1.35,
       fontWeight: FontWeight.w500,
     );
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[palette.start, palette.end],
+        ),
         borderRadius: BorderRadius.circular(28),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[palette.start, palette.end],
-            ),
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                color: palette.start.withValues(alpha: 0.24),
-                blurRadius: 24,
-                offset: const Offset(0, 14),
-              ),
-            ],
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: palette.start.withValues(alpha: 0.24),
+            blurRadius: 24,
+            offset: const Offset(0, 14),
           ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(28),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(28),
           child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final horizontalPadding = isCompact ? 16.0 : 20.0;
