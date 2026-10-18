@@ -212,6 +212,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1004,
   ),
   ProjectEntry(
+    id: 'farm_kids',
+    title: 'Farm Kids',
+    description:
+        'Run a farm: spell seeds, learn the seasons and count your coins',
+    slug: 'farming',
+    icon: Icons.agriculture_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1005,
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
