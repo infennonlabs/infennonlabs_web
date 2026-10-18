@@ -29,17 +29,37 @@ void main() {
     expect(find.text('Play Now'), findsWidgets);
   });
 
-  test('home registry marks Math Solitaire as non-live and uses K-3rd label', () {
-    final mathAdventures = kProjectRegistry.firstWhere(
-      (ProjectEntry entry) => entry.id == 'math_adventures_kids',
-    );
-    expect(mathAdventures.gradeRangeLabel, 'K-3rd');
+  testWidgets('footer links to the published privacy policy and terms', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const InfennonLabsApp());
 
-    final mathSolitaire = kProjectRegistry.firstWhere(
-      (ProjectEntry entry) => entry.id == 'math_solitaire_kids',
+    expect(
+      find.byKey(const Key('home-privacy-policy-link'), skipOffstage: false),
+      findsOneWidget,
     );
-    expect(mathSolitaire.isPlaceholder, isTrue);
+    expect(
+      find.byKey(const Key('home-terms-of-service-link'), skipOffstage: false),
+      findsOneWidget,
+    );
+    expect(find.text('Privacy Policy', skipOffstage: false), findsOneWidget);
+    expect(find.text('Terms of Service', skipOffstage: false), findsOneWidget);
   });
+
+  test(
+    'home registry marks Math Solitaire as non-live and uses K-3rd label',
+    () {
+      final mathAdventures = kProjectRegistry.firstWhere(
+        (ProjectEntry entry) => entry.id == 'math_adventures_kids',
+      );
+      expect(mathAdventures.gradeRangeLabel, 'K-3rd');
+
+      final mathSolitaire = kProjectRegistry.firstWhere(
+        (ProjectEntry entry) => entry.id == 'math_solitaire_kids',
+      );
+      expect(mathSolitaire.isPlaceholder, isTrue);
+    },
+  );
 
   testWidgets('mobile tiles scale compactly with available width', (
     WidgetTester tester,

@@ -11,11 +11,11 @@ const String _appBuildChannel = String.fromEnvironment(
   defaultValue: 'stable',
 );
 
-Future<void> _launchUri(Uri uri) async {
+Future<void> _launchUri(Uri uri, {String windowName = '_self'}) async {
   await launchUrl(
     uri,
     mode: LaunchMode.platformDefault,
-    webOnlyWindowName: '_self',
+    webOnlyWindowName: windowName,
   );
 }
 
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: Responsive.spacing(context, 3)),
                     const _ContactSection(),
                     SizedBox(height: Responsive.spacing(context, 1.5)),
-                    const _LegalPlaceholderLinks(),
+                    const _LegalLinks(),
                   ],
                 ),
               ),
@@ -946,29 +946,48 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-class _LegalPlaceholderLinks extends StatelessWidget {
-  const _LegalPlaceholderLinks();
+class _LegalLinks extends StatelessWidget {
+  const _LegalLinks();
 
   @override
   Widget build(BuildContext context) {
+    const dividerColor = Color(0xFF98A2B3);
     final textStyle = TextStyle(
       color: const Color(0xFF667085),
       fontSize: 13,
       fontWeight: FontWeight.w700,
       decoration: TextDecoration.underline,
-      decorationColor: const Color(0xFF98A2B3),
+      decorationColor: dividerColor,
     );
 
-    return Center(
-      child: Text.rich(
-        TextSpan(
-          children: <InlineSpan>[
-            TextSpan(text: 'Privacy Policy', style: textStyle),
-            const TextSpan(text: '  |  '),
-            TextSpan(text: 'Terms of Service', style: textStyle),
-          ],
+    Widget link(String label, Uri uri, Key key) {
+      return InkWell(
+        key: key,
+        onTap: () => _launchUri(uri, windowName: '_blank'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+          child: Text(label, style: textStyle),
         ),
-        textAlign: TextAlign.center,
+      );
+    }
+
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          link(
+            'Privacy Policy',
+            GlobalSettingsScreen.privacyPolicyUri,
+            const Key('home-privacy-policy-link'),
+          ),
+          const Text('|', style: TextStyle(color: dividerColor)),
+          link(
+            'Terms of Service',
+            GlobalSettingsScreen.termsOfServiceUri,
+            const Key('home-terms-of-service-link'),
+          ),
+        ],
       ),
     );
   }
