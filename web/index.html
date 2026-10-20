@@ -18,11 +18,12 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="InfennonLabs makes free early learning games for ages 3-12, from PreK through 5th grade. Alphabet, counting, math, reading and more. No subscription.">
+  <meta name="description" content="Free early learning games for kids ages 3-12, PreK through 5th grade. No subscription required. Alphabet, counting, math, reading, science and more.">
+  <meta name="robots" content="max-image-preview:large, max-snippet:-1">
   <meta name="google-adsense-account" content="ca-pub-8017542409324420">
   <meta name="theme-color" content="#0B5E8B">
   <meta property="og:title" content="InfennonLabs: Free Early Learning Games for Kids">
-  <meta property="og:description" content="InfennonLabs makes free early learning games for ages 3-12, from PreK through 5th grade. Alphabet, counting, math, reading and more. No subscription.">
+  <meta property="og:description" content="Free early learning games for kids ages 3-12, PreK through 5th grade. No subscription required. Alphabet, counting, math, reading, science and more.">
   <meta property="og:type" content="website">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -38,12 +39,34 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
+  <script>
+    // Keep Flutter's internal font-measurement text out of search-result snippets.
+    // Google only honors data-nosnippet on span/div/section, so wrap the <p> Flutter adds.
+    (function () {
+      var TEXT = 'flutter typography measurement';
+      function wrap(node) {
+        if (node.nodeType !== 1 || node.tagName !== 'P' || node.textContent !== TEXT) return;
+        var parent = node.parentNode;
+        if (!parent || (parent.hasAttribute && parent.hasAttribute('data-nosnippet'))) return;
+        var span = document.createElement('span');
+        span.setAttribute('data-nosnippet', '');
+        span.style.display = 'contents';
+        parent.insertBefore(span, node);
+        span.appendChild(node);
+      }
+      var observer = new MutationObserver(function (records) {
+        records.forEach(function (record) { record.addedNodes.forEach(wrap); });
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+      setTimeout(function () { observer.disconnect(); }, 60000);
+    })();
+  </script>
   <script
     async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8017542409324420"
     crossorigin="anonymous"></script>
 
-  <title>InfennonLabs: Free Early Learning Games for Kids (PreK-5th)</title>
+  <title>Free Learning Games for Kids, No Subscription Required</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
