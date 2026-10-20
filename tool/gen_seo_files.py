@@ -27,7 +27,7 @@ WEB = ROOT / "web"
 HEADING = "InfennonLabs: free early learning games for kids"
 INTRO = (
     "InfennonLabs makes free, simple, focused learning games for children from "
-    "PreK through 5th grade. There is no subscription and no distracting "
+    "preschool and PreK through 5th grade, ages 3 to 12. There is no subscription and no distracting "
     "characters, just clear practice with the alphabet, counting, math, reading, "
     "science, money, time and everyday life skills. The games were built from "
     "experience with the author's own two kids, and they play right in your web "
