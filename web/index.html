@@ -61,10 +61,28 @@
       setTimeout(function () { observer.disconnect(); }, 60000);
     })();
   </script>
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8017542409324420"
-    crossorigin="anonymous"></script>
+  <script>
+    // Load Google AdSense after Flutter's first frame so it does not compete with app startup
+    // (it added ~1.1s to first paint on mobile). Same script and publisher ID as before; ad
+    // units queued by adsbygoogle.push() run when it arrives. The google-adsense-account meta
+    // tag above and ads.txt are unchanged.
+    (function () {
+      var loaded = false;
+      function loadAds() {
+        if (loaded) return;
+        loaded = true;
+        var script = document.createElement('script');
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8017542409324420';
+        document.head.appendChild(script);
+      }
+      // Flutter dispatches this on window after the first frame renders.
+      window.addEventListener('flutter-first-frame', function () { setTimeout(loadAds, 1500); }, { once: true });
+      // Fallback if the event never fires (older engine, load error): 10s after window load.
+      window.addEventListener('load', function () { setTimeout(loadAds, 10000); }, { once: true });
+    })();
+  </script>
 
   <title>Free Learning Games for Kids, No Subscription Required</title>
   <link rel="manifest" href="manifest.json">
