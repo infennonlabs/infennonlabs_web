@@ -7,12 +7,14 @@ Run from anywhere:
 
 Without --out the files go to web/. With --inject-index the visually hidden
 content block (heading, intro, links to every game) is inserted into that built
-index.html right after <body>; re-running replaces the block.
+index.html right after <body>, plus Organization/WebSite JSON-LD in <head>; re-running
+replaces both.
 build_learning.sh calls this for the stable home build.
 Placeholder entries (isPlaceholder: true) are left out everywhere.
 """
 import argparse
 import html
+import json
 import pathlib
 import re
 import sys
@@ -35,6 +37,9 @@ INTRO = (
 HIDDEN_STYLE = (
     "position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;"
     "overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"
+)
+JSONLD_RE = re.compile(
+    r'\s*<script type="application/ld\+json" id="seo-site-jsonld">.*?</script>', re.S
 )
 BLOCK_RE = re.compile(r'\s*<div id="seo-content".*?</div>\s*<!--/seo-content-->', re.S)
 
@@ -79,11 +84,38 @@ def content_block(games: list[dict[str, str]]) -> str:
     )
 
 
+def site_jsonld() -> str:
+    data = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": f"{SITE}/#organization",
+                "name": "Infennon Labs",
+                "url": f"{SITE}/",
+                "logo": f"{SITE}/home/icons/Icon-512.png",
+            },
+            {
+                "@type": "WebSite",
+                "@id": f"{SITE}/#website",
+                "name": "Infennon Labs",
+                "url": f"{SITE}/",
+                "inLanguage": "en",
+                "publisher": {"@id": f"{SITE}/#organization"},
+            },
+        ],
+    }
+    payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    return f'  <script type="application/ld+json" id="seo-site-jsonld">{payload}</script>\n'
+
+
 def inject_into_index(index_path: pathlib.Path, games: list[dict[str, str]]) -> None:
     page = index_path.read_text(encoding="utf-8")
     page = BLOCK_RE.sub("", page)
-    if "<body>" not in page:
-        sys.exit(f"ERROR: {index_path} has no <body> to carry the content block")
+    page = JSONLD_RE.sub("", page)
+    if "<body>" not in page or "</head>" not in page:
+        sys.exit(f"ERROR: {index_path} needs <body> and </head> for the SEO markup")
+    page = page.replace("</head>", site_jsonld() + "</head>", 1)
     page = page.replace("<body>", "<body>\n" + content_block(games) + "\n", 1)
     index_path.write_text(page, encoding="utf-8")
     print(f"injected content block ({len(games)} game links) into {index_path}")
