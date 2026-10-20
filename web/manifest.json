@@ -1,11 +1,11 @@
 {
-    "name": "Infennon Labs",
+    "name": "InfennonLabs",
     "short_name": "Infennon",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0B5E8B",
     "theme_color": "#0B5E8B",
-    "description": "Infennon Labs homepage for playful learning projects.",
+    "description": "InfennonLabs makes free early learning games for ages 3-12, from PreK through 5th grade. Alphabet, counting, math, reading and more. No subscription.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

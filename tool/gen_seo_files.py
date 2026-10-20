@@ -24,9 +24,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 REGISTRY = ROOT / "lib" / "project_registry.dart"
 WEB = ROOT / "web"
 
-HEADING = "Infennon Labs: free early learning games for kids"
+HEADING = "InfennonLabs: free early learning games for kids"
 INTRO = (
-    "Infennon Labs makes free, simple, focused learning games for children from "
+    "InfennonLabs makes free, simple, focused learning games for children from "
     "PreK through 5th grade. There is no subscription and no distracting "
     "characters, just clear practice with the alphabet, counting, math, reading, "
     "science, money, time and everyday life skills. The games were built from "
@@ -91,14 +91,16 @@ def site_jsonld() -> str:
             {
                 "@type": "Organization",
                 "@id": f"{SITE}/#organization",
-                "name": "Infennon Labs",
+                "name": "InfennonLabs",
+                "alternateName": "Infennon Labs",
                 "url": f"{SITE}/",
                 "logo": f"{SITE}/home/icons/Icon-512.png",
             },
             {
                 "@type": "WebSite",
                 "@id": f"{SITE}/#website",
-                "name": "Infennon Labs",
+                "name": "InfennonLabs",
+                "alternateName": "Infennon Labs",
                 "url": f"{SITE}/",
                 "inLanguage": "en",
                 "publisher": {"@id": f"{SITE}/#organization"},
