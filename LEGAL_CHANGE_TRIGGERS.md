@@ -28,6 +28,7 @@ Owner: InfennonLabs LLC. Contact in the documents: privacy@infennonlabs.com. Not
 | Date | Document | Change |
 |---|---|---|
 | 2026-10-17 | Privacy, Terms | First version drafted. Liability cap US$20. |
+| 2026-10-21 | Privacy, Terms | Contact address changed to 519 W 22nd St Ste 300 PMB 550709, Sioux Falls, SD 57105-1745 (was 514 Americas Way PMB 18751, Box Elder, SD 57719). Effective date left at October 17, 2026 (owner decision). PDFs in `infennonlabs_legal_text/` still need regenerating. |
 
 ## Wording held back until each SDK ships
 
