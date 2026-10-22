@@ -231,6 +231,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1005,
   ),
   ProjectEntry(
+    id: 'comic_kids',
+    title: 'Comic Kids',
+    description:
+        'Build your own comic book pages with heroes, scenes and speech bubbles, then write the story',
+    slug: 'comicbook',
+    icon: Icons.auto_stories_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1006,
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
