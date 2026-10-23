@@ -233,8 +233,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
   ProjectEntry(
     id: 'comic_kids',
     title: 'Comic Kids',
-    description:
-        'Build your own comic book pages with heroes, scenes and speech bubbles, then write the story',
+    description: 'Create your own comics. EXCELSIOR!',
     slug: 'comicbook',
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'All',
