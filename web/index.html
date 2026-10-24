@@ -85,6 +85,19 @@
   </script>
 
   <title>Free Learning Games for Kids, No Subscription Required</title>
+  <script id="seo-title-lock">
+    // Flutter sets document.title at runtime (MaterialApp title) and Google indexes the rendered
+    // title, so keep the SEO title above in place. Runs before the app starts.
+    (function () {
+      var t = document.title;
+      try { Object.defineProperty(document, 'title', { configurable: true, get: function () { return t; }, set: function () {} }); } catch (e) {}
+      var n = document.querySelector('title');
+      if (n && window.MutationObserver) {
+        new MutationObserver(function () { if (n.textContent !== t) n.textContent = t; })
+          .observe(n, { childList: true, characterData: true, subtree: true });
+      }
+    })();
+  </script>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
