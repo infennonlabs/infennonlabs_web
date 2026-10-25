@@ -240,6 +240,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 1006,
   ),
   ProjectEntry(
+    id: 'arcade_lab',
+    title: 'Arcade Lab',
+    description: 'Arcade games for everyone',
+    slug: 'arcade',
+    icon: Icons.sports_esports_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1007,
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
