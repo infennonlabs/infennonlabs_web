@@ -811,12 +811,22 @@ class _AboutSection extends StatelessWidget {
           ),
           SizedBox(height: isCompact ? 10 : 12),
           Text(
-            'InfennonLabs learning is an effort to provide truly free learning experiences for young children as they begin their journey through school. The goal is to present a clear experience without the need for a subscription or distracting interface/characters. The focus should be on learning and getting stronger skills for life. These projects have been built based on the experiences I\'ve had with my own two kids. One day I would like for this platform to be a vessel in which any child could interact to have their own tailored games made for their specific development needs.',
+            AboutContent.mission,
             style: TextStyle(
               fontSize: isCompact ? 15 : 17,
               height: 1.55,
               color: const Color(0xFF334155),
               fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: isCompact ? 12 : 16),
+          Text(
+            AboutContent.specialThanks,
+            style: TextStyle(
+              fontSize: isCompact ? 15 : 17,
+              height: 1.55,
+              color: const Color(0xFF334155),
+              fontWeight: FontWeight.w800,
             ),
           ),
         ],
