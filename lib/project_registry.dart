@@ -119,6 +119,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 18,
   ),
   ProjectEntry(
+    id: 'slice_it',
+    title: 'Slice It',
+    description:
+        'Slice, balance and compare fractions with fruit, scales and pizza',
+    slug: 'slice',
+    icon: Icons.pie_chart_outline,
+    gradeRangeLabel: '3rd-5th',
+    ageOrder: 26,
+  ),
+  ProjectEntry(
     id: 'chem_kids',
     title: 'Chem Kids',
     description: 'Chemistry exploration and periodic table learning',
