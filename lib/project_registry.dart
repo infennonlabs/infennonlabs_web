@@ -287,6 +287,15 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 20,
   ),
   ProjectEntry(
+    id: 'book_fixers',
+    title: 'Book Fixers',
+    description: 'Punctuation, spelling and books master training',
+    slug: 'editor',
+    icon: Icons.edit_note_outlined,
+    gradeRangeLabel: '1st-3rd',
+    ageOrder: 23,
+  ),
+  ProjectEntry(
     id: 'math_solitaire_kids',
     title: 'Math Solitaire Kids',
     description: 'Math practice blended with card-style puzzle play.',
