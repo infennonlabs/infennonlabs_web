@@ -129,6 +129,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     ageOrder: 26,
   ),
   ProjectEntry(
+    id: 'be_with_god',
+    title: 'Be With God',
+    description:
+        'Catholic Bible stories, prayers, word search and faith lessons for kids',
+    slug: 'bewith',
+    icon: Icons.menu_book_outlined,
+    gradeRangeLabel: 'PreK-2nd',
+    ageOrder: 24,
+  ),
+  ProjectEntry(
     id: 'chem_kids',
     title: 'Chem Kids',
     description: 'Chemistry exploration and periodic table learning',
