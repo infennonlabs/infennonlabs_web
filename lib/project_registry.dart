@@ -61,7 +61,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'does-it-solve',
     icon: Icons.extension_outlined,
     gradeRangeLabel: 'K-1st',
-    ageOrder: 14,
+    ageOrder: 15,
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -89,7 +89,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'math-adventure',
     icon: Icons.calculate_outlined,
     gradeRangeLabel: 'K-3rd',
-    ageOrder: 17,
+    ageOrder: 18,
   ),
   ProjectEntry(
     id: 'memory_match',
@@ -107,7 +107,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'reading-writing',
     icon: Icons.menu_book_outlined,
     gradeRangeLabel: 'K-3rd',
-    ageOrder: 16,
+    ageOrder: 17,
   ),
   ProjectEntry(
     id: 'sight_word_search',
@@ -116,7 +116,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'sight-word',
     icon: Icons.search_outlined,
     gradeRangeLabel: 'K-5th',
-    ageOrder: 18,
+    ageOrder: 19,
   ),
   ProjectEntry(
     id: 'slice_it',
@@ -135,8 +135,8 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
         'Catholic Bible stories, prayers, word search and faith lessons for kids',
     slug: 'bewith',
     icon: Icons.menu_book_outlined,
-    gradeRangeLabel: 'PreK-2nd',
-    ageOrder: 24,
+    gradeRangeLabel: 'PreK-5th',
+    ageOrder: 14,
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -172,7 +172,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'grammar',
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'K-2nd',
-    ageOrder: 15,
+    ageOrder: 16,
   ),
   ProjectEntry(
     id: 'word_blend_kids',
@@ -181,7 +181,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'contractions',
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 21,
+    ageOrder: 22,
   ),
   ProjectEntry(
     id: 'realm_breaker',
@@ -190,7 +190,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'fantasy',
     icon: Icons.auto_awesome_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 22,
+    ageOrder: 23,
   ),
   ProjectEntry(
     id: 'pumpkin_carver',
@@ -275,7 +275,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'make-change',
     icon: Icons.price_change_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 19,
+    ageOrder: 20,
   ),
   ProjectEntry(
     id: 'clockwork',
@@ -284,7 +284,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'clockwork',
     icon: Icons.schedule_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 20,
+    ageOrder: 21,
   ),
   ProjectEntry(
     id: 'book_fixers',
@@ -293,7 +293,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'editor',
     icon: Icons.edit_note_outlined,
     gradeRangeLabel: '1st-3rd',
-    ageOrder: 23,
+    ageOrder: 24,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
