@@ -780,6 +780,50 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ready: true,
     allModesNote: 'Your child can play any of the arcade games.',
   ),
+  'measure_it': StudyGameData(
+    ready: false,
+    allModesNote: 'Your child practices every measuring activity.',
+    modes: <StudyModeInfo>[
+      StudyModeInfo(
+        id: 'scoop-and-level',
+        title: 'Scoop & Level',
+        description:
+            'Measure flour, sugar and rice with cups and level them off.',
+      ),
+      StudyModeInfo(
+        id: 'spoon-ladder',
+        title: 'Spoon Ladder',
+        description:
+            'Pour teaspoons into tablespoons and cups to see how they compare.',
+      ),
+      StudyModeInfo(
+        id: 'pour-lab',
+        title: 'Pour Lab',
+        description: 'Fill a jug to cups, pints, quarts and gallons.',
+      ),
+      StudyModeInfo(
+        id: 'balance-scale',
+        title: 'Balance Scale',
+        description: 'Weigh things in ounces and pounds on a balance scale.',
+      ),
+      StudyModeInfo(
+        id: 'stretch-ruler',
+        title: 'Stretch Ruler',
+        description: 'Measure objects in inches, feet and yards.',
+      ),
+      StudyModeInfo(
+        id: 'recipe-scaling',
+        title: 'Recipe Scaling',
+        description: 'Double, triple or halve the amounts in a recipe.',
+      ),
+      StudyModeInfo(
+        id: 'estimate',
+        title: 'Estimate',
+        description:
+            'Pick the unit that makes sense, like ounces, pounds or tons.',
+      ),
+    ],
+  ),
 };
 
 /// Games deliberately left out of Study Plans for now, with the reason.

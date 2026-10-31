@@ -146,6 +146,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     band: HomeBand.bigKids,
   ),
   ProjectEntry(
+    id: 'measure_it',
+    title: 'Measure Market',
+    description: 'Scoop, pour, weigh and measure with cups, pounds, and inches',
+    slug: 'measure-it',
+    icon: Icons.scale_outlined,
+    gradeRangeLabel: '3rd-5th',
+    ageOrder: 27,
+    band: HomeBand.bigKids,
+  ),
+  ProjectEntry(
     id: 'be_with_god',
     title: 'Be With God',
     description:
