@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Try the Study Plan in Chrome with the games built from this machine.
 #
-#   tool/study_plan_local.sh build   builds the eight Study Plan games (a few minutes)
+#   tool/study_plan_local.sh build [game-id ...]
+#                                    builds the ready Study Plan games, or just the ids given
+#                                    (a minute or so each)
 #   tool/study_plan_local.sh serve   serves them on http://localhost:8090 (leave running)
 #   tool/study_plan_local.sh home    runs the home in Chrome, embedding those games
 #
-# The games are built from their own folders next to this one, from whatever
+# The game list comes from .github/learning/study_plan.json in the hub. Games are built from their
+# own folders next to this one, from whatever
 # branch each has checked out. Output goes to build/study_games/<slug>/.
 set -euo pipefail
 
@@ -14,28 +17,35 @@ DOCS_DIR="$(cd "$HOME_DIR/.." && pwd)"
 OUT="$HOME_DIR/build/study_games"
 PORT="${STUDY_PLAN_PORT:-8090}"
 
-# app folder : slug the home embeds it from
-GAMES=(
-  "pumpkin_carver:pumpkin-carving"
-  "piano_synth_demo:piano"
-  "cooking_kids:cooking"
-  "paint_by_number:coloring"
-  "anatomy_kids:anatomy"
-  "farm_kids:farming"
-  "comic_kids:comicbook"
-  "arcade_lab:arcade"
-)
+HUB_DIR="$DOCS_DIR/.workspace-copilot"
+
+# "app-folder:slug" lines for the games to build: the ids given after `build`, or
+# every game the Study Plan data file marks ready.
+game_lines() {
+  python3 - "$HUB_DIR" "$@" <<'PY'
+import json, sys
+hub, wanted = sys.argv[1], set(sys.argv[2:])
+data = json.load(open(f"{hub}/.github/learning/study_plan.json"))["games"]
+games = {g["id"]: g for g in json.load(open(f"{hub}/.github/learning/games.json"))}
+for gid, g in data.items():
+    if (gid in wanted) if wanted else g.get("ready"):
+        print(f"{games[gid]['localPath']}:{games[gid]['slug']}")
+PY
+}
 
 case "${1:-}" in
   build)
+    shift
     mkdir -p "$OUT"
-    for entry in "${GAMES[@]}"; do
+    built=0
+    while IFS= read -r entry; do
       app="${entry%%:*}"
       slug="${entry##*:}"
       echo "== building $app -> /$slug/"
       (cd "$DOCS_DIR/$app" && flutter build web --release --base-href "/$slug/" --output "$OUT/$slug")
-    done
-    echo "Built ${#GAMES[@]} games into $OUT"
+      built=$((built + 1))
+    done < <(game_lines "$@")
+    echo "Built $built games into $OUT"
     ;;
   serve)
     echo "Serving $OUT on http://localhost:$PORT (Ctrl-C to stop)"
