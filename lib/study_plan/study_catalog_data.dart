@@ -824,11 +824,36 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
       ),
     ],
   ),
+  'be_with_god': StudyGameData(
+    ready: true,
+    allModesNote:
+        'A mix of reading, praying, a word search, and learning about the faith.',
+    modes: <StudyModeInfo>[
+      StudyModeInfo(
+        id: 'bible',
+        title: 'Bible',
+        description: 'Read Bible stories one book at a time.',
+      ),
+      StudyModeInfo(
+        id: 'prayer',
+        title: 'Prayer',
+        description: 'Learn and say familiar prayers.',
+      ),
+      StudyModeInfo(
+        id: 'word-search',
+        title: 'Biblical Word Search',
+        description: 'Find the words from a Bible story in a puzzle.',
+      ),
+      StudyModeInfo(
+        id: 'our-faith',
+        title: 'Our Faith',
+        description: 'Read short stories that explain the life of the Church.',
+      ),
+    ],
+  ),
 };
 
 /// Games deliberately left out of Study Plans for now, with the reason.
 const Map<String, String> kStudyPlanNotYet = <String, String>{
-  'be_with_god':
-      'Has a lot of uncommitted work; hooked up after it is committed.',
   'math_solitaire_kids': 'Placeholder on the home, not live yet.',
 };
