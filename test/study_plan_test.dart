@@ -44,6 +44,24 @@ void main() {
       tester.pumpWidget(const SizedBox.shrink());
 
   group('catalog', () {
+    test('lists games in the home page order', () {
+      final List<ProjectEntry> byId = <ProjectEntry>[
+        for (final StudyGameInfo g in studyGames()) g.entry,
+      ];
+      for (var i = 1; i < byId.length; i++) {
+        final ProjectEntry a = byId[i - 1];
+        final ProjectEntry b = byId[i];
+        final int band = (a.band ?? HomeBand.everyone).index.compareTo(
+          (b.band ?? HomeBand.everyone).index,
+        );
+        expect(
+          band < 0 || (band == 0 && (a.ageOrder ?? 999) <= (b.ageOrder ?? 999)),
+          isTrue,
+          reason: '${a.id} should come before ${b.id}',
+        );
+      }
+    });
+
     test('offers exactly the games the data file marks ready', () {
       final List<String> offered = studyGames()
           .map((StudyGameInfo g) => g.id)
@@ -52,7 +70,7 @@ void main() {
         for (final ProjectEntry e in kProjectRegistry)
           if (!e.isPlaceholder && (kStudyGameData[e.id]?.ready ?? false)) e.id,
       ];
-      expect(offered, ready);
+      expect(offered.toSet(), ready.toSet());
       expect(offered, isNotEmpty);
       for (final StudyGameInfo game in studyGames()) {
         expect(game.allModesNote, isNotEmpty);

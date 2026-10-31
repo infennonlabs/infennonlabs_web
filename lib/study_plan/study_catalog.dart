@@ -1,3 +1,4 @@
+import 'package:grade_filter_shared/grade_filter_shared.dart' show HomeBand;
 import '../project_registry.dart';
 import 'study_catalog_data.dart';
 import 'study_game_data.dart';
@@ -55,19 +56,30 @@ class StudyGameInfo {
   }
 }
 
-/// The games a parent can add to a Study Plan, in home-page order: the games
-/// the data file marks `ready`.
+/// The games a parent can add to a Study Plan, in home-page order (band, then
+/// age order): the games the data file marks `ready`.
 List<StudyGameInfo> studyGames([
   List<ProjectEntry> registry = kProjectRegistry,
   Map<String, StudyGameData> data = kStudyGameData,
 ]) {
-  return <StudyGameInfo>[
+  final List<ProjectEntry> ordered = <ProjectEntry>[
     for (final ProjectEntry entry in registry)
-      if (!entry.isPlaceholder && (data[entry.id]?.ready ?? false))
-        StudyGameInfo(
-          entry: entry,
-          allModesNote: data[entry.id]!.allModesNote,
-          modes: data[entry.id]!.modes,
-        ),
+      if (!entry.isPlaceholder && (data[entry.id]?.ready ?? false)) entry,
+  ]..sort(_homeOrder);
+  return <StudyGameInfo>[
+    for (final ProjectEntry entry in ordered)
+      StudyGameInfo(
+        entry: entry,
+        allModesNote: data[entry.id]!.allModesNote,
+        modes: data[entry.id]!.modes,
+      ),
   ];
+}
+
+/// The home page's order: bands in declared order, then `ageOrder` inside a band.
+int _homeOrder(ProjectEntry a, ProjectEntry b) {
+  final int band = (a.band ?? HomeBand.everyone).index.compareTo(
+    (b.band ?? HomeBand.everyone).index,
+  );
+  return band != 0 ? band : (a.ageOrder ?? 999).compareTo(b.ageOrder ?? 999);
 }
