@@ -857,7 +857,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
         'Your child builds freely with bricks and picks their own world to build in.',
   ),
   'earth_lab': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child can use every activity across all seven topics.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
