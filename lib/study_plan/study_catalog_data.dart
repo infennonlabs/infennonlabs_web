@@ -781,7 +781,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     allModesNote: 'Your child can play any of the arcade games.',
   ),
   'measure_it': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every measuring activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
