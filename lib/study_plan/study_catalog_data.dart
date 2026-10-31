@@ -140,7 +140,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'make_it': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child works through every recipe activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -252,7 +252,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'math_adventures_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every math activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -442,7 +442,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'reading_writing_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every reading and writing activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -459,11 +459,6 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
         id: 'reading',
         title: 'Reading',
         description: 'Read and answer a quick comprehension prompt.',
-      ),
-      StudyModeInfo(
-        id: 'sentence-builder',
-        title: 'Sentence Builder',
-        description: 'Choose the sentence that sounds right.',
       ),
       StudyModeInfo(
         id: 'word-patterns',
