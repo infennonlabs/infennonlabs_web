@@ -851,6 +851,11 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
       ),
     ],
   ),
+  'brick_builder': StudyGameData(
+    ready: false,
+    allModesNote:
+        'Your child builds freely with bricks and picks their own world to build in.',
+  ),
 };
 
 /// Games deliberately left out of Study Plans for now, with the reason.

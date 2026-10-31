@@ -311,6 +311,16 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     band: HomeBand.everyone,
   ),
   ProjectEntry(
+    id: 'brick_builder',
+    title: 'Brick Builder',
+    description: 'Build cities, pirate islands and moon bases from colorful bricks',
+    slug: 'builder',
+    icon: Icons.location_city_outlined,
+    gradeRangeLabel: 'All',
+    ageOrder: 1008,
+    band: HomeBand.everyone,
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
