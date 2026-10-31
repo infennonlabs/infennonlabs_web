@@ -856,6 +856,152 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     allModesNote:
         'Your child builds freely with bricks and picks their own world to build in.',
   ),
+  'earth_lab': StudyGameData(
+    ready: false,
+    allModesNote: 'Your child can use every activity across all seven topics.',
+    modes: <StudyModeInfo>[
+      StudyModeInfo(
+        id: 'layers-explore',
+        title: 'Explore the Layers',
+        description:
+            'Tap each layer of the Earth to learn how thick, deep and hot it is.',
+      ),
+      StudyModeInfo(
+        id: 'dig-down',
+        title: 'Dig Down',
+        description:
+            'Drill through the layers of the Earth, answering a question in each one.',
+      ),
+      StudyModeInfo(
+        id: 'layer-sort',
+        title: 'Layer Sort',
+        description:
+            'Drag each label onto the layer of the Earth it belongs to.',
+      ),
+      StudyModeInfo(
+        id: 'plates-explore',
+        title: 'Explore the Plates',
+        description:
+            'Watch tectonic plates push together, pull apart and slide past each other.',
+      ),
+      StudyModeInfo(
+        id: 'make-landform',
+        title: 'Make a Landform',
+        description:
+            'Pick how the plates move to make a mountain range, a rift valley or an earthquake.',
+      ),
+      StudyModeInfo(
+        id: 'boundary-match',
+        title: 'Boundary Match',
+        description:
+            'Name what the plates are doing, then match real places to their plate boundary.',
+      ),
+      StudyModeInfo(
+        id: 'mountains-explore',
+        title: 'Explore Mountains',
+        description:
+            'Watch fold, fault-block and volcanic mountains get built, then wear them down with erosion.',
+      ),
+      StudyModeInfo(
+        id: 'build-range',
+        title: 'Build a Range',
+        description:
+            'Choose how a famous mountain was built and watch it grow.',
+      ),
+      StudyModeInfo(
+        id: 'mountain-sort',
+        title: 'Mountain Sort',
+        description:
+            'Sort mountains and clues into fold, fault-block and volcanic mountains.',
+      ),
+      StudyModeInfo(
+        id: 'water-explore',
+        title: 'Explore Water',
+        description:
+            'Explore the water cycle, rivers, lakes and the ocean zones.',
+      ),
+      StudyModeInfo(
+        id: 'follow-drop',
+        title: 'Follow the Drop',
+        description: 'Travel around the water cycle as a drop of water.',
+      ),
+      StudyModeInfo(
+        id: 'ocean-depths',
+        title: 'Ocean Depths',
+        description:
+            'Dive a submarine down through the ocean zones, answering a question in each.',
+      ),
+      StudyModeInfo(
+        id: 'water-sort',
+        title: 'Water Body Sort',
+        description: 'Sort names and clues into oceans, rivers and lakes.',
+      ),
+      StudyModeInfo(
+        id: 'sky-explore',
+        title: 'Explore the Sky',
+        description: 'Tap each layer of the atmosphere to learn what is there.',
+      ),
+      StudyModeInfo(
+        id: 'sky-climb',
+        title: 'Sky Climb',
+        description:
+            'Fly a rocket up through the layers of the sky, answering a question in each.',
+      ),
+      StudyModeInfo(
+        id: 'weather-layer',
+        title: 'Weather Layer',
+        description:
+            'Sort clouds, the ozone layer, shooting stars and auroras into the right layer of the sky.',
+      ),
+      StudyModeInfo(
+        id: 'light-explore',
+        title: 'Explore Light',
+        description:
+            'See how a prism makes a rainbow and explore the kinds of light we cannot see.',
+      ),
+      StudyModeInfo(
+        id: 'rainbow-maker',
+        title: 'Rainbow Maker',
+        description:
+            'Answer questions about how rainbows and prisms work to bring out the rainbow.',
+      ),
+      StudyModeInfo(
+        id: 'spectrum-order',
+        title: 'Spectrum Order',
+        description:
+            'Put the colors of the rainbow and the kinds of light in order.',
+      ),
+      StudyModeInfo(
+        id: 'which-light',
+        title: 'Which Light?',
+        description:
+            'Name the kind of light from a clue, from X-rays to microwaves.',
+      ),
+      StudyModeInfo(
+        id: 'magnet-explore',
+        title: 'Explore Magnetism',
+        description:
+            'Drag a compass around the Earth\'s magnetic field and see the shield that bends the solar wind.',
+      ),
+      StudyModeInfo(
+        id: 'compass-quest',
+        title: 'Compass Quest',
+        description: 'Use a compass to say which way a landmark is.',
+      ),
+      StudyModeInfo(
+        id: 'aurora-shield',
+        title: 'Aurora Shield',
+        description:
+            'Answer questions about the solar wind, the magnetic shield and auroras.',
+      ),
+      StudyModeInfo(
+        id: 'pole-match',
+        title: 'Pole Match',
+        description:
+            'Decide whether magnets attract or repel, and learn how magnets work.',
+      ),
+    ],
+  ),
 };
 
 /// Games deliberately left out of Study Plans for now, with the reason.

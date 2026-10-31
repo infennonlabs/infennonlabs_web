@@ -156,6 +156,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     band: HomeBand.bigKids,
   ),
   ProjectEntry(
+    id: 'earth_lab',
+    title: 'Earth Lab',
+    description:
+        'Dig through the Earth, build mountains, dive the ocean and explore the sky',
+    slug: 'earth',
+    icon: Icons.public_outlined,
+    gradeRangeLabel: '3rd-5th',
+    ageOrder: 28,
+    band: HomeBand.bigKids,
+  ),
+  ProjectEntry(
     id: 'be_with_god',
     title: 'Be With God',
     description:
