@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_filter_shared/grade_filter_shared.dart';
 
 class ProjectEntry {
   const ProjectEntry({
@@ -9,6 +10,7 @@ class ProjectEntry {
     required this.icon,
     this.gradeRangeLabel,
     this.ageOrder,
+    this.band,
     this.isPlaceholder = false,
     this.channelPolicy = 'both',
     this.launchUrl,
@@ -21,6 +23,10 @@ class ProjectEntry {
   final IconData icon;
   final String? gradeRangeLabel;
   final int? ageOrder;
+
+  /// The home section this game sits in. A manual choice, copied from the
+  /// launcher; placeholders have none.
+  final HomeBand? band;
   final String channelPolicy;
   final String? launchUrl;
   final bool isPlaceholder;
@@ -35,6 +41,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.abc,
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 0,
+    band: HomeBand.early,
   ),
   ProjectEntry(
     id: 'calendar_kids',
@@ -44,6 +51,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.calendar_month_outlined,
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 1,
+    band: HomeBand.early,
   ),
   ProjectEntry(
     id: 'emergency_kids',
@@ -53,6 +61,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.health_and_safety_outlined,
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 2,
+    band: HomeBand.early,
   ),
   ProjectEntry(
     id: 'does_it_solve',
@@ -62,6 +71,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.extension_outlined,
     gradeRangeLabel: 'K-1st',
     ageOrder: 15,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -71,6 +81,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.grid_view_rounded,
     gradeRangeLabel: 'PreK-5th',
     ageOrder: 13,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'make_it',
@@ -80,6 +91,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.build_circle_outlined,
     gradeRangeLabel: 'PreK-2nd',
     ageOrder: 11,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'math_adventures_kids',
@@ -90,6 +102,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.calculate_outlined,
     gradeRangeLabel: 'K-3rd',
     ageOrder: 18,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'memory_match',
@@ -99,6 +112,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.style_outlined,
     gradeRangeLabel: 'PreK-2nd',
     ageOrder: 12,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'reading_writing_kids',
@@ -108,6 +122,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.menu_book_outlined,
     gradeRangeLabel: 'K-3rd',
     ageOrder: 17,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'sight_word_search',
@@ -117,6 +132,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.search_outlined,
     gradeRangeLabel: 'K-5th',
     ageOrder: 19,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'slice_it',
@@ -127,6 +143,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.pie_chart_outline,
     gradeRangeLabel: '3rd-5th',
     ageOrder: 26,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'be_with_god',
@@ -137,6 +154,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.menu_book_outlined,
     gradeRangeLabel: 'PreK-5th',
     ageOrder: 14,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -146,6 +164,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.science_outlined,
     gradeRangeLabel: '5th',
     ageOrder: 999,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'countin_kids',
@@ -155,6 +174,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.numbers_outlined,
     gradeRangeLabel: 'PreK-K',
     ageOrder: 9,
+    band: HomeBand.early,
   ),
   ProjectEntry(
     id: 'speak_repeat',
@@ -164,6 +184,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.record_voice_over_outlined,
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 3,
+    band: HomeBand.early,
   ),
   ProjectEntry(
     id: 'grammar_adventures_kids',
@@ -173,6 +194,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'K-2nd',
     ageOrder: 16,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'word_blend_kids',
@@ -182,6 +204,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.spellcheck_outlined,
     gradeRangeLabel: '1st-3rd',
     ageOrder: 22,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'realm_breaker',
@@ -191,6 +214,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.auto_awesome_outlined,
     gradeRangeLabel: '1st-3rd',
     ageOrder: 23,
+    band: HomeBand.growing,
   ),
   ProjectEntry(
     id: 'pumpkin_carver',
@@ -200,6 +224,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.sentiment_very_satisfied_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1000,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'piano_synth_demo',
@@ -210,6 +235,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.piano,
     gradeRangeLabel: 'All',
     ageOrder: 1001,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'cooking_kids',
@@ -220,6 +246,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.restaurant_menu_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1002,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'paint_by_number',
@@ -229,6 +256,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.palette_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1003,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'anatomy_kids',
@@ -239,6 +267,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.accessibility_new_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1004,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'farm_kids',
@@ -249,6 +278,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.agriculture_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1005,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'comic_kids',
@@ -258,6 +288,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.auto_stories_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1006,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'arcade_lab',
@@ -267,6 +298,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.sports_esports_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1007,
+    band: HomeBand.everyone,
   ),
   ProjectEntry(
     id: 'make_change',
@@ -276,6 +308,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.price_change_outlined,
     gradeRangeLabel: '1st-3rd',
     ageOrder: 20,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'clockwork',
@@ -285,6 +318,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.schedule_outlined,
     gradeRangeLabel: '1st-3rd',
     ageOrder: 21,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'book_fixers',
@@ -294,6 +328,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     icon: Icons.edit_note_outlined,
     gradeRangeLabel: '1st-3rd',
     ageOrder: 24,
+    band: HomeBand.bigKids,
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',

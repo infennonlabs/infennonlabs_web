@@ -33,10 +33,13 @@ dependencies:
 
   game_settings_shared:
     path: ../.workspace-copilot/packages/game_settings_shared
+  grade_filter_shared:
+    path: ../.workspace-copilot/packages/grade_filter_shared
   google_fonts: ^6.3.2
   mode_selection_shared:
     path: ../.workspace-copilot/packages/mode_selection_shared
   url_launcher: ^6.3.0
+  web: ^1.1.0
 
 dev_dependencies:
   flutter_test:

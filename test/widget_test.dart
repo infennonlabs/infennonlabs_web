@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:grade_filter_shared/grade_filter_shared.dart';
 
+import 'package:infennon_labs_home/grade_filter_store.dart';
 import 'package:infennon_labs_home/main.dart';
 import 'package:infennon_labs_home/project_registry.dart';
 
 void main() {
+  setUp(() => saveGradeLabel(null));
+
   Future<void> pumpAtSize(WidgetTester tester, {required Size size}) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1.0;
@@ -91,5 +95,90 @@ void main() {
     expect(projectCardAspectRatioForWidth(320), closeTo(1.28, 0.001));
     expect(projectCardAspectRatioForWidth(390), closeTo(1.322, 0.001));
     expect(projectCardAspectRatioForWidth(520), closeTo(1.40, 0.001));
+  });
+
+  test('every live game on the home has a band', () {
+    for (final entry in kProjectRegistry.where((e) => !e.isPlaceholder)) {
+      expect(entry.band, isNotNull, reason: '${entry.id} has no band');
+    }
+  });
+
+  testWidgets('games are grouped under the four band headings', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(1200, 6000));
+
+    for (final band in HomeBand.values) {
+      expect(find.text(band.label), findsOneWidget);
+    }
+    expect(find.text('Alpha Kids'), findsOneWidget);
+    expect(find.text('Coming Soon'), findsWidgets);
+  });
+
+  testWidgets('choosing a grade filters games and hides empty bands', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(1200, 6000));
+
+    await tester.tap(find.byKey(const ValueKey<String>('filter-PreK')));
+    await tester.pump();
+
+    expect(find.text('Alpha Kids'), findsOneWidget);
+    expect(find.text('Make It'), findsOneWidget);
+    // Piano Practice is an "All" game, so it shows under every grade.
+    expect(find.text('Piano Practice'), findsOneWidget);
+    expect(find.text('Chem Kids'), findsNothing);
+    expect(find.text('Clockwork'), findsNothing);
+    // No 1st-3rd games remain, so the Big kids band is gone.
+    expect(find.text(HomeBand.bigKids.label), findsNothing);
+    expect(find.text('Coming Soon'), findsNothing);
+    expect(readSavedGradeLabel(), 'PreK');
+  });
+
+  testWidgets('5th+ shows the games that reach 5th grade', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(1200, 6000));
+
+    await tester.tap(find.byKey(const ValueKey<String>('filter-5th+')));
+    await tester.pump();
+
+    expect(find.text('Chem Kids'), findsOneWidget);
+    expect(find.text('Sight Word Search'), findsOneWidget);
+    expect(find.text('Alpha Kids'), findsNothing);
+  });
+
+  testWidgets('tapping the grade again or Show all clears the filter', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(1200, 6000));
+    const chip = ValueKey<String>('filter-K');
+
+    await tester.tap(find.byKey(chip));
+    await tester.pump();
+    expect(find.text('Chem Kids'), findsNothing);
+
+    await tester.tap(find.byKey(chip));
+    await tester.pump();
+    expect(find.text('Chem Kids'), findsOneWidget);
+    expect(readSavedGradeLabel(), isNull);
+
+    await tester.tap(find.byKey(chip));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey<String>('filter-reset')));
+    await tester.pump();
+    expect(find.text('Chem Kids'), findsOneWidget);
+    expect(readSavedGradeLabel(), isNull);
+  });
+
+  testWidgets('a grade chosen earlier in the session is restored', (
+    WidgetTester tester,
+  ) async {
+    saveGradeLabel('2nd');
+    await pumpAtSize(tester, size: const Size(1200, 6000));
+
+    expect(find.text('Chem Kids'), findsNothing);
+    expect(find.text('Clockwork'), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('filter-reset')), findsOneWidget);
   });
 }

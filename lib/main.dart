@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:game_settings_shared/game_settings_shared.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grade_filter_shared/grade_filter_shared.dart';
 import 'package:mode_selection_shared/mode_selection_shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'grade_filter_store.dart';
 import 'project_registry.dart';
 
 const String _appBuildChannel = String.fromEnvironment(
@@ -65,6 +67,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static const String _projectBaseUrl = 'https://infennonlabs.com';
 
+  /// Restored from this tab's session, so coming back from a game keeps it.
+  GradeFilter? _filter = GradeFilter.fromLabel(readSavedGradeLabel());
+
+  void _setFilter(GradeFilter? value) {
+    setState(() => _filter = value);
+    saveGradeLabel(value?.label);
+  }
+
   Future<void> _openProject(ProjectEntry entry) async {
     final uri = Uri.parse(entry.launchUrl ?? '$_projectBaseUrl/${entry.slug}/');
     await _launchUri(uri);
@@ -86,8 +96,10 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     const _Header(),
                     SizedBox(height: Responsive.spacing(context, 3)),
+                    _GradeFilterBar(selected: _filter, onChanged: _setFilter),
                     _ProjectSection(
                       projects: kProjectRegistry,
+                      filter: _filter,
                       onTap: _openProject,
                     ),
                     SizedBox(height: Responsive.spacing(context, 3)),
@@ -301,10 +313,82 @@ class _StaggeredReveal extends StatelessWidget {
   }
 }
 
+/// Grade buttons for the home, with a note and a reset while one is chosen.
+class _GradeFilterBar extends StatelessWidget {
+  const _GradeFilterBar({required this.selected, required this.onChanged});
+
+  final GradeFilter? selected;
+  final ValueChanged<GradeFilter?> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final current = selected;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.72),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.9)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Semantics(
+            header: true,
+            child: const Text(
+              'Find games for your grade',
+              style: TextStyle(
+                color: BrandTheme.ink,
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: <Widget>[
+              for (final grade in GradeFilter.values)
+                ChoiceChip(
+                  key: ValueKey<String>('filter-${grade.label}'),
+                  label: Text(grade.label),
+                  selected: current == grade,
+                  showCheckmark: false,
+                  selectedColor: BrandTheme.ocean,
+                  labelStyle: TextStyle(
+                    color: current == grade ? Colors.white : BrandTheme.ink,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  // Tapping the selected grade again shows every game.
+                  onSelected: (_) => onChanged(current == grade ? null : grade),
+                ),
+            ],
+          ),
+          if (current != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                key: const ValueKey<String>('filter-reset'),
+                onPressed: () => onChanged(null),
+                child: Text('Showing games for ${current.label}. Show all'),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ProjectSection extends StatelessWidget {
-  const _ProjectSection({required this.projects, required this.onTap});
+  const _ProjectSection({
+    required this.projects,
+    required this.filter,
+    required this.onTap,
+  });
 
   final List<ProjectEntry> projects;
+  final GradeFilter? filter;
   final ValueChanged<ProjectEntry> onTap;
 
   @override
@@ -315,24 +399,108 @@ class _ProjectSection extends StatelessWidget {
         : width >= 720
         ? 2
         : 1;
-    final liveProjects =
-        projects
-            .where((ProjectEntry entry) => !entry.isPlaceholder)
-            .where(_isVisibleOnCurrentChannel)
-            .toList()
-          ..sort((ProjectEntry a, ProjectEntry b) {
-            final left = a.ageOrder ?? 999;
-            final right = b.ageOrder ?? 999;
-            return left.compareTo(right);
-          });
-    final remainder = liveProjects.length % columns;
+    final liveProjects = projects
+        .where((ProjectEntry entry) => !entry.isPlaceholder)
+        .where(_isVisibleOnCurrentChannel)
+        .where(
+          (ProjectEntry entry) =>
+              gradeRangeMatches(entry.gradeRangeLabel ?? 'All', filter),
+        )
+        .toList();
+    final aspectRatio = projectCardAspectRatioForWidth(width);
+
+    // Bands in display order; a band with no matching game is left out.
+    final bands = <HomeBand, List<ProjectEntry>>{
+      for (final band in HomeBand.values)
+        band:
+            liveProjects
+                .where(
+                  (ProjectEntry entry) =>
+                      (entry.band ?? HomeBand.everyone) == band,
+                )
+                .toList()
+              ..sort(
+                (ProjectEntry a, ProjectEntry b) =>
+                    (a.ageOrder ?? 999).compareTo(b.ageOrder ?? 999),
+              ),
+    }..removeWhere((HomeBand _, List<ProjectEntry> list) => list.isEmpty);
+
+    if (bands.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 28),
+        child: Text(
+          'No games for this grade yet.',
+          style: TextStyle(
+            color: BrandTheme.ink,
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      );
+    }
+
+    // The unfiltered page still ends with "coming soon" tiles that fill the
+    // last row; they are left out while a grade is chosen.
+    final lastBand = bands.keys.last;
+    var paletteIndex = 0;
+    var revealIndex = 0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        for (final band in bands.keys) ...<Widget>[
+          _BandHeading(band: band, count: bands[band]!.length),
+          Builder(
+            builder: (BuildContext context) {
+              final entries = bands[band]!;
+              final displayProjects = <ProjectEntry>[
+                ...entries,
+                if (filter == null && band == lastBand)
+                  ..._comingSoonEntries(entries.length, columns),
+              ];
+              final startPalette = paletteIndex;
+              final startReveal = revealIndex;
+              paletteIndex += displayProjects.length;
+              revealIndex += displayProjects.length;
+              return GridView.builder(
+                itemCount: displayProjects.length,
+                shrinkWrap: true,
+                clipBehavior: Clip.none,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: aspectRatio,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  final entry = displayProjects[index];
+                  final palette = ModePalettes.byIndex(startPalette + index);
+                  return _StaggeredReveal(
+                    index: startReveal + index,
+                    child: _ProjectCard(
+                      entry: entry,
+                      palette: palette,
+                      onTap: entry.isPlaceholder ? null : () => onTap(entry),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ],
+    );
+  }
+
+  List<ProjectEntry> _comingSoonEntries(int liveCount, int columns) {
+    final remainder = liveCount % columns;
     final placeholderCount = remainder == 0 ? columns : columns - remainder;
-    final displayProjects = <ProjectEntry>[
-      ...liveProjects,
+    return <ProjectEntry>[
       for (var i = 0; i < placeholderCount; i++)
         ProjectEntry(
-          id: '__coming-soon-$i',
-          title: 'More Games Soon',
+          id: '__coming_soon_$i',
+          title: 'Coming Soon',
           description:
               'New learning games are on the way. Check back for future launches.',
           slug: '__coming-soon-$i',
@@ -340,37 +508,6 @@ class _ProjectSection extends StatelessWidget {
           isPlaceholder: true,
         ),
     ];
-    final aspectRatio = projectCardAspectRatioForWidth(width);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        GridView.builder(
-          itemCount: displayProjects.length,
-          shrinkWrap: true,
-          clipBehavior: Clip.none,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: aspectRatio,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            final entry = displayProjects[index];
-            final palette = ModePalettes.byIndex(index);
-            return _StaggeredReveal(
-              index: index,
-              child: _ProjectCard(
-                entry: entry,
-                palette: palette,
-                onTap: entry.isPlaceholder ? null : () => onTap(entry),
-              ),
-            );
-          },
-        ),
-      ],
-    );
   }
 
   bool _isVisibleOnCurrentChannel(ProjectEntry entry) {
@@ -378,6 +515,55 @@ class _ProjectSection extends StatelessWidget {
       return _appBuildChannel == 'dev';
     }
     return true;
+  }
+}
+
+class _BandHeading extends StatelessWidget {
+  const _BandHeading({required this.band, required this.count});
+
+  final HomeBand band;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30, bottom: 14),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              color: band.accent,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Flexible(
+            child: Semantics(
+              header: true,
+              child: Text(
+                band.label,
+                style: const TextStyle(
+                  color: BrandTheme.ink,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            count == 1 ? '1 game' : '$count games',
+            style: const TextStyle(
+              color: Color(0xFF5A6878),
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
