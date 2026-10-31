@@ -4,6 +4,7 @@ import 'package:grade_filter_shared/grade_filter_shared.dart';
 import 'package:infennon_labs_home/main.dart';
 import 'package:infennon_labs_home/project_registry.dart';
 import 'package:infennon_labs_home/study_plan/study_catalog.dart';
+import 'package:infennon_labs_home/study_plan/study_catalog_data.dart';
 import 'package:infennon_labs_home/study_plan/study_plan_card.dart';
 import 'package:infennon_labs_home/study_plan/study_plan_page.dart';
 import 'package:infennon_labs_home/study_plan/study_runner_page.dart';
@@ -43,25 +44,31 @@ void main() {
       tester.pumpWidget(const SizedBox.shrink());
 
   group('catalog', () {
-    test('offers the eight games with grade All', () {
-      final List<StudyGameInfo> games = studyGames();
-      expect(games.map((StudyGameInfo g) => g.id), <String>[
-        'pumpkin_carver',
-        'piano_synth_demo',
-        'cooking_kids',
-        'paint_by_number',
-        'anatomy_kids',
-        'farm_kids',
-        'comic_kids',
-        'arcade_lab',
-      ]);
-      for (final StudyGameInfo game in games) {
-        expect(game.entry.gradeRangeLabel, 'All');
+    test('offers exactly the games the data file marks ready', () {
+      final List<String> offered = studyGames()
+          .map((StudyGameInfo g) => g.id)
+          .toList();
+      final List<String> ready = <String>[
+        for (final ProjectEntry e in kProjectRegistry)
+          if (!e.isPlaceholder && (kStudyGameData[e.id]?.ready ?? false)) e.id,
+      ];
+      expect(offered, ready);
+      expect(offered, isNotEmpty);
+      for (final StudyGameInfo game in studyGames()) {
         expect(game.allModesNote, isNotEmpty);
         for (final StudyModeInfo mode in game.modes) {
           expect(mode.description, isNotEmpty);
         }
       }
+    });
+
+    test('a game that is not ready is not offered', () {
+      final List<StudyGameInfo> games =
+          studyGames(kProjectRegistry, const <String, StudyGameData>{
+            'alpha_kids': StudyGameData(ready: false, allModesNote: 'x'),
+            'farm_kids': StudyGameData(ready: true, allModesNote: 'y'),
+          });
+      expect(games.map((StudyGameInfo g) => g.id), <String>['farm_kids']);
     });
 
     test('mode ids are unique inside each game', () {
@@ -85,6 +92,73 @@ void main() {
         piano.urlFor('listen', baseUrl: 'https://x.test').toString(),
         'https://x.test/piano/?mode=listen',
       );
+    });
+  });
+
+  group('Study Plan data', () {
+    final Set<String> liveIds = <String>{
+      for (final ProjectEntry e in kProjectRegistry)
+        if (!e.isPlaceholder) e.id,
+    };
+
+    test('every live game on the home has a Study Plan decision', () {
+      // Adding a game to the home registry fails here until it is added to
+      // .github/learning/study_plan.json (as a game, or under notYet with a
+      // reason) and scripts/gen_study_plan_catalog.py is run.
+      final Set<String> decided = <String>{
+        ...kStudyGameData.keys,
+        ...kStudyPlanNotYet.keys,
+      };
+      expect(liveIds.difference(decided), isEmpty);
+    });
+
+    test('the data names no game the home does not have', () {
+      final Set<String> allIds = <String>{
+        for (final ProjectEntry e in kProjectRegistry) e.id,
+      };
+      expect(kStudyGameData.keys.toSet().difference(allIds), isEmpty);
+      expect(kStudyPlanNotYet.keys.toSet().difference(allIds), isEmpty);
+    });
+
+    test('no game is both in Study Plans and left out of them', () {
+      expect(
+        kStudyGameData.keys.toSet().intersection(kStudyPlanNotYet.keys.toSet()),
+        isEmpty,
+      );
+    });
+
+    test('mode ids are tidy and unique, and no mode is random', () {
+      final RegExp kebab = RegExp(r'^[a-z0-9]+(-[a-z0-9]+)*$');
+      final RegExp random = RegExp(
+        'random|progression|surprise|shuffle',
+        caseSensitive: false,
+      );
+      kStudyGameData.forEach((String gameId, StudyGameData game) {
+        final List<String> ids = game.modes
+            .map((StudyModeInfo m) => m.id)
+            .toList();
+        expect(
+          ids.toSet().length,
+          ids.length,
+          reason: '$gameId has a repeated id',
+        );
+        for (final StudyModeInfo mode in game.modes) {
+          expect(kebab.hasMatch(mode.id), isTrue, reason: '$gameId ${mode.id}');
+          expect(mode.title.trim(), isNotEmpty, reason: '$gameId ${mode.id}');
+          expect(
+            mode.description.trim(),
+            isNotEmpty,
+            reason: '$gameId ${mode.id}',
+          );
+          expect(
+            random.hasMatch('${mode.title} ${mode.description}'),
+            isFalse,
+            reason:
+                '$gameId ${mode.id} reads like a random mode; leave it out '
+                'and let All Modes cover it',
+          );
+        }
+      });
     });
   });
 
