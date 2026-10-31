@@ -6,7 +6,7 @@ import 'study_game_data.dart';
 /// Every game's Study Plan data. A game is offered in the picker only when `ready`.
 const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
   'alpha_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child works through every alphabet activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -37,7 +37,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'calendar_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices days, months and seasons.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -104,7 +104,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'countin_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every counting activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(

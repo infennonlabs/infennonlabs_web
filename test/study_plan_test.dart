@@ -182,10 +182,18 @@ void main() {
       await openPlanner(tester);
       expect(find.text('Study Plan'), findsOneWidget);
       expect(find.text(kStudyPlanSubtitle), findsOneWidget);
-      expect(find.text('Piano Practice'), findsOneWidget);
-      expect(find.text('Arcade Lab'), findsOneWidget);
-      // Every game offered is "All", so there is nothing for grades to filter.
-      expect(find.byKey(const ValueKey<String>('study-grade-K')), findsNothing);
+      for (final StudyGameInfo game in studyGames()) {
+        expect(find.text(game.title), findsWidgets, reason: game.title);
+      }
+      // Grade buttons appear only once a game with a grade range is on offer.
+      final bool hasGradedGame = studyGames().any(
+        (StudyGameInfo g) =>
+            GradeSpan.parse(g.entry.gradeRangeLabel ?? 'All') != null,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('study-grade-K')),
+        hasGradedGame ? findsOneWidget : findsNothing,
+      );
       expect(
         tester
             .widget<FilledButton>(
