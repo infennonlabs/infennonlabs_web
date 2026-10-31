@@ -167,7 +167,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'memory_match': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote:
         'Your child plays every memory mode, in a mixed learning path.',
     modes: <StudyModeInfo>[
@@ -221,7 +221,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'does_it_solve': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child works through every math logic activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -371,7 +371,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'grammar_adventures_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every grammar activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -416,7 +416,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'word_blend_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every contraction activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -509,7 +509,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'clockwork': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every telling-time activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
