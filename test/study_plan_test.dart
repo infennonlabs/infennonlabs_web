@@ -335,14 +335,7 @@ void main() {
     testWidgets(
       'the home grade filter carries over once a graded game is offered',
       (WidgetTester tester) async {
-        final List<ProjectEntry> registry = <ProjectEntry>[...kProjectRegistry];
-        final List<StudyGameInfo> games = <StudyGameInfo>[
-          ...studyGames(registry),
-          StudyGameInfo(
-            entry: registry.firstWhere((ProjectEntry e) => e.id == 'chem_kids'),
-            allModesNote: 'Every chemistry mode.',
-          ),
-        ];
+        final List<StudyGameInfo> games = studyGames();
         final StudyPlanDraft draft = StudyPlanDraft();
         await tester.pumpWidget(
           MaterialApp(

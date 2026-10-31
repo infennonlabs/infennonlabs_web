@@ -58,7 +58,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'emergency_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every emergency skill.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -86,7 +86,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'speak_repeat': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every listen-and-repeat activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -190,7 +190,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'mahjong': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child plays every tile-matching style.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -304,7 +304,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'realm_breaker': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child plays every part of the realm.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -325,7 +325,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'make_change': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every money activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -473,7 +473,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'sight_word_search': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every sight word activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -568,7 +568,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'chem_kids': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child explores every chemistry activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -590,7 +590,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'slice_it': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote: 'Your child practices every fraction activity.',
     modes: <StudyModeInfo>[
       StudyModeInfo(
@@ -621,7 +621,7 @@ const Map<String, StudyGameData> kStudyGameData = <String, StudyGameData>{
     ],
   ),
   'book_fixers': StudyGameData(
-    ready: false,
+    ready: true,
     allModesNote:
         'Your child works through every proofreading and book-parts activity.',
     modes: <StudyModeInfo>[
