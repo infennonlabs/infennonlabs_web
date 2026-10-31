@@ -38,8 +38,13 @@ dependencies:
   google_fonts: ^6.3.2
   mode_selection_shared:
     path: ../.workspace-copilot/packages/mode_selection_shared
+  study_plan_bridge_shared:
+    path: ../.workspace-copilot/packages/study_plan_bridge_shared
+  study_plan_shared:
+    path: ../.workspace-copilot/packages/study_plan_shared
   url_launcher: ^6.3.0
   web: ^1.1.0
+  pointer_interceptor: ^0.10.1+3
 
 dev_dependencies:
   flutter_test:

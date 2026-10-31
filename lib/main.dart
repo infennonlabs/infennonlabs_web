@@ -3,10 +3,20 @@ import 'package:game_settings_shared/game_settings_shared.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grade_filter_shared/grade_filter_shared.dart';
 import 'package:mode_selection_shared/mode_selection_shared.dart';
+import 'package:study_plan_bridge_shared/study_plan_bridge_shared.dart';
+import 'package:study_plan_shared/study_plan_shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'brand_theme.dart';
 import 'grade_filter_store.dart';
+import 'home_backdrop.dart';
 import 'project_registry.dart';
+import 'study_plan/study_catalog.dart';
+import 'study_plan/study_plan_card.dart';
+import 'study_plan/study_plan_page.dart';
+import 'study_plan/study_runner_page.dart';
+
+export 'brand_theme.dart' show BrandTheme;
 
 const String _appBuildChannel = String.fromEnvironment(
   'APP_BUILD_CHANNEL',
@@ -21,15 +31,10 @@ Future<void> _launchUri(Uri uri, {String windowName = '_self'}) async {
   );
 }
 
-class BrandTheme {
-  static const Color ink = Color(0xFF0F2231);
-  static const Color ocean = Color(0xFF0B5E8B);
-  static const Color lime = Color(0xFF8FD060);
-  static const Color peach = Color(0xFFFFB36A);
-  static const Color sky = Color(0xFF4CB4E7);
-}
-
 void main() {
+  // If a game's old Back to Home loaded this page inside a Study Plan frame,
+  // hand the child back to the plan instead of showing the home in the frame.
+  if (StudyPlanBridge.isFramed) StudyPlanBridge.requestExit();
   runApp(const InfennonLabsApp());
 }
 
@@ -70,6 +75,36 @@ class _HomePageState extends State<HomePage> {
   /// Restored from this tab's session, so coming back from a game keeps it.
   GradeFilter? _filter = GradeFilter.fromLabel(readSavedGradeLabel());
 
+  /// The Study Plan being put together. Lives only while this page is open.
+  final StudyPlanDraft _plan = StudyPlanDraft();
+
+  @override
+  void dispose() {
+    _plan.dispose();
+    super.dispose();
+  }
+
+  void _prepareStudyPlan() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => StudyPlanPage(draft: _plan, initialGrade: _filter),
+      ),
+    );
+  }
+
+  void _startStudyPlan() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => StudyRunnerPage(
+          items: _plan.items,
+          totalMinutes: _plan.totalMinutes,
+          games: studyGames(),
+          onFinished: _plan.clear,
+        ),
+      ),
+    );
+  }
+
   void _setFilter(GradeFilter? value) {
     setState(() => _filter = value);
     saveGradeLabel(value?.label);
@@ -85,7 +120,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          const _Backdrop(),
+          const HomeBackdrop(),
           SafeArea(
             child: ResponsivePage(
               maxWidth: 1180,
@@ -96,7 +131,39 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     const _Header(),
                     SizedBox(height: Responsive.spacing(context, 3)),
-                    _GradeFilterBar(selected: _filter, onChanged: _setFilter),
+                    LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints c) {
+                        final filterBar = _GradeFilterBar(
+                          selected: _filter,
+                          onChanged: _setFilter,
+                        );
+                        final planCard = StudyPlanCard(
+                          draft: _plan,
+                          onPrepare: _prepareStudyPlan,
+                          onStart: _startStudyPlan,
+                        );
+                        if (c.maxWidth < 900) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              planCard,
+                              const SizedBox(height: 14),
+                              filterBar,
+                            ],
+                          );
+                        }
+                        return IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Expanded(flex: 3, child: filterBar),
+                              const SizedBox(width: 16),
+                              Expanded(flex: 2, child: planCard),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                     _ProjectSection(
                       projects: kProjectRegistry,
                       filter: _filter,
@@ -150,70 +217,6 @@ class _NoScrollbarBehavior extends MaterialScrollBehavior {
     ScrollableDetails details,
   ) {
     return child;
-  }
-}
-
-class _Backdrop extends StatelessWidget {
-  const _Backdrop();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[
-            Color(0xFFE9F8FF),
-            Color(0xFFFFF6E2),
-            Color(0xFFEAFDE9),
-          ],
-        ),
-      ),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: -80,
-            left: -60,
-            child: _GlowBubble(color: BrandTheme.sky, size: 260),
-          ),
-          Positioned(
-            top: 120,
-            right: -50,
-            child: _GlowBubble(color: BrandTheme.peach, size: 220),
-          ),
-          Positioned(
-            bottom: -60,
-            left: 80,
-            child: _GlowBubble(color: BrandTheme.lime, size: 210),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GlowBubble extends StatelessWidget {
-  const _GlowBubble({required this.color, required this.size});
-
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: <Color>[
-            color.withValues(alpha: 0.75),
-            color.withValues(alpha: 0.0),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -323,13 +326,9 @@ class _GradeFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final current = selected;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(18, 16, 18, 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.9)),
-      ),
+    // No panel of its own: the title and buttons sit on the page background.
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(2, 4, 2, 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -355,7 +354,24 @@ class _GradeFilterBar extends StatelessWidget {
                   label: Text(grade.label),
                   selected: current == grade,
                   showCheckmark: false,
+                  // White buttons with a soft border read clearly on the
+                  // page background; the chosen grade fills in.
+                  backgroundColor: Colors.white,
                   selectedColor: BrandTheme.ocean,
+                  elevation: 0,
+                  pressElevation: 0,
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      color: current == grade
+                          ? BrandTheme.ocean
+                          : const Color(0xFF9FB2C4),
+                      width: 1.5,
+                    ),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 8,
+                  ),
                   labelStyle: TextStyle(
                     color: current == grade ? Colors.white : BrandTheme.ink,
                     fontWeight: FontWeight.w700,
