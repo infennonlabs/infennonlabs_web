@@ -61,6 +61,7 @@ List<StudyGameInfo> studyGames([
         description: entry.description,
         icon: entry.icon,
         gradeRangeLabel: entry.gradeRangeLabel,
+        subjects: entry.subjects,
         allModesNote: data[entry.id]!.allModesNote,
         modes: data[entry.id]!.modes,
       ),

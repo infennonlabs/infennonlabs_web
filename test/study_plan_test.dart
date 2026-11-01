@@ -393,6 +393,90 @@ void main() {
     );
   });
 
+  group('subject filter', () {
+    testWidgets('the home subject carries over and filters the picker', (
+      WidgetTester tester,
+    ) async {
+      final StudyPlanDraft draft = StudyPlanDraft();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StudyPlanPage(
+            draft: draft,
+            initialSubject: Subject.science,
+            games: studyGames(),
+            gameBuilder: studyFrameBuilder,
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(
+        tester
+            .widget<ChoiceChip>(
+              find.byKey(const ValueKey<String>('study-subject-Science')),
+            )
+            .selected,
+        isTrue,
+      );
+      expect(find.text('Chem Kids'), findsOneWidget);
+      expect(find.text('Farm Kids'), findsNothing);
+
+      await tapKey(tester, 'study-subject-Science');
+      expect(find.text('Farm Kids'), findsOneWidget);
+      await leave(tester);
+    });
+
+    testWidgets('subject and grade combine, and Clear filters resets both', (
+      WidgetTester tester,
+    ) async {
+      tester.view.physicalSize = const Size(1200, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StudyPlanPage(
+            draft: StudyPlanDraft(),
+            initialGrade: GradeFilter.preK,
+            initialSubject: Subject.faith,
+            games: <StudyGameInfo>[
+              for (final StudyGameInfo g in studyGames())
+                if (g.id == 'be_with_god' || g.id == 'chem_kids') g,
+            ],
+            gameBuilder: studyFrameBuilder,
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Be With God'), findsOneWidget);
+
+      // Faith is chosen but Chem Kids is a 5th grade Science game: nothing
+      // matches once the subject changes to Science for PreK.
+      await tapKey(tester, 'study-subject-Science');
+      expect(find.text('Chem Kids'), findsNothing);
+      expect(
+        find.text('No games match this grade and subject yet.'),
+        findsOneWidget,
+      );
+
+      await tapKey(tester, 'study-clear-filters');
+      expect(find.text('Be With God'), findsOneWidget);
+      expect(find.text('Chem Kids'), findsOneWidget);
+      await leave(tester);
+    });
+
+    test('study games carry the registry subjects', () {
+      final Map<String, Set<Subject>> bySubject = <String, Set<Subject>>{
+        for (final StudyGameInfo g in studyGames()) g.id: g.subjects,
+      };
+      expect(bySubject['cooking_kids'], <Subject>{
+        Subject.lifeSkills,
+        Subject.reading,
+        Subject.math,
+      });
+      expect(bySubject['be_with_god'], <Subject>{Subject.faith});
+    });
+  });
+
   group('runner', () {
     final List<StudyGameInfo> games = studyGames();
     const List<StudyPlanItem> items = <StudyPlanItem>[

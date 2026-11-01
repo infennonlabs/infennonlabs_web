@@ -7,7 +7,10 @@ import 'package:infennon_labs_home/main.dart';
 import 'package:infennon_labs_home/project_registry.dart';
 
 void main() {
-  setUp(() => saveGradeLabel(null));
+  setUp(() {
+    saveGradeLabel(null);
+    saveSubjectLabel(null);
+  });
 
   Future<void> pumpAtSize(WidgetTester tester, {required Size size}) async {
     tester.view.physicalSize = size;
@@ -180,5 +183,120 @@ void main() {
     expect(find.text('Chem Kids'), findsNothing);
     expect(find.text('Clockwork'), findsOneWidget);
     expect(find.byKey(const ValueKey<String>('filter-reset')), findsOneWidget);
+  });
+
+  group('subject filter', () {
+    Future<void> pickSubject(WidgetTester tester, String label) async {
+      await tester.tap(find.byKey(ValueKey<String>('subject-$label')));
+      await tester.pump();
+    }
+
+    testWidgets('choosing a subject filters games and hides empty bands', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      await pickSubject(tester, 'Science');
+
+      expect(find.text('Earth Lab'), findsOneWidget);
+      expect(find.text('Chem Kids'), findsOneWidget);
+      expect(find.text('Anatomy Kids'), findsOneWidget);
+      expect(find.text('Alpha Kids'), findsNothing);
+      expect(find.text('Clockwork'), findsNothing);
+      // No Science game sits in Early learners or Growing learners.
+      expect(find.text(HomeBand.early.label), findsNothing);
+      expect(find.text(HomeBand.growing.label), findsNothing);
+      expect(find.text('Coming Soon'), findsNothing);
+      expect(readSavedSubjectLabel(), 'Science');
+    });
+
+    testWidgets('a game with several subjects shows under each of them', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      for (final label in <String>[
+        'Life Skills',
+        'Reading & Writing',
+        'Math',
+      ]) {
+        await pickSubject(tester, label);
+        expect(find.text('Cooking Kids'), findsOneWidget, reason: label);
+      }
+      await pickSubject(tester, 'Science');
+      expect(find.text('Cooking Kids'), findsNothing);
+    });
+
+    testWidgets('subject and grade combine', (WidgetTester tester) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      await tester.tap(find.byKey(const ValueKey<String>('filter-PreK')));
+      await pickSubject(tester, 'Math');
+
+      expect(find.text('Countin Kids'), findsOneWidget);
+      expect(find.text('Memory Match'), findsOneWidget);
+      // Math, but not PreK.
+      expect(find.text('Slice It'), findsNothing);
+      expect(find.text('Math Adventures Kids'), findsNothing);
+      // PreK, but not Math.
+      expect(find.text('Alpha Kids'), findsNothing);
+    });
+
+    testWidgets('chip counts follow the chosen grade', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+      Finder chip(String label, int n) => find.descendant(
+        of: find.byKey(ValueKey<String>('subject-$label')),
+        matching: find.text('$label  $n'),
+      );
+
+      expect(chip('Faith & Values', 1), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey<String>('filter-PreK')));
+      await tester.pump();
+      // Anatomy Kids is the only Science game that reaches PreK.
+      expect(chip('Science', 1), findsOneWidget);
+    });
+
+    testWidgets('tapping again or Show all clears both filters', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      await pickSubject(tester, 'Math');
+      await pickSubject(tester, 'Math');
+      expect(find.text('Alpha Kids'), findsOneWidget);
+      expect(readSavedSubjectLabel(), isNull);
+
+      await tester.tap(find.byKey(const ValueKey<String>('filter-K')));
+      await pickSubject(tester, 'Math');
+      await tester.tap(find.byKey(const ValueKey<String>('filter-reset')));
+      await tester.pump();
+      expect(find.text('Chem Kids'), findsOneWidget);
+      expect(readSavedGradeLabel(), isNull);
+      expect(readSavedSubjectLabel(), isNull);
+    });
+
+    testWidgets('a subject chosen earlier in the session is restored', (
+      WidgetTester tester,
+    ) async {
+      saveSubjectLabel('Faith & Values');
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      expect(find.text('Be With God'), findsOneWidget);
+      expect(find.text('Alpha Kids'), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('filter-reset')),
+        findsOneWidget,
+      );
+    });
+
+    test('every live game is tagged with at least one subject', () {
+      final untagged = <String>[
+        for (final entry in kProjectRegistry)
+          if (!entry.isPlaceholder && entry.subjects.isEmpty) entry.id,
+      ];
+      expect(untagged, isEmpty);
+    });
   });
 }

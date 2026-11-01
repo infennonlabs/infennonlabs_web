@@ -71,6 +71,7 @@ class _HomePageState extends State<HomePage> {
 
   /// Restored from this tab's session, so coming back from a game keeps it.
   GradeFilter? _filter = GradeFilter.fromLabel(readSavedGradeLabel());
+  Subject? _subject = Subject.fromLabel(readSavedSubjectLabel());
 
   /// The Study Plan being put together. Lives only while this page is open.
   final StudyPlanDraft _plan = StudyPlanDraft();
@@ -90,6 +91,7 @@ class _HomePageState extends State<HomePage> {
           gameBuilder: studyFrameBuilder,
           backdrop: const HomeBackdrop(),
           initialGrade: _filter,
+          initialSubject: _subject,
         ),
       ),
     );
@@ -112,6 +114,20 @@ class _HomePageState extends State<HomePage> {
   void _setFilter(GradeFilter? value) {
     setState(() => _filter = value);
     saveGradeLabel(value?.label);
+  }
+
+  void _setSubject(Subject? value) {
+    setState(() => _subject = value);
+    saveSubjectLabel(value?.label);
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _filter = null;
+      _subject = null;
+    });
+    saveGradeLabel(null);
+    saveSubjectLabel(null);
   }
 
   Future<void> _openProject(ProjectEntry entry) async {
@@ -140,6 +156,10 @@ class _HomePageState extends State<HomePage> {
                         final filterBar = _GradeFilterBar(
                           selected: _filter,
                           onChanged: _setFilter,
+                          subject: _subject,
+                          onSubjectChanged: _setSubject,
+                          onClear: _clearFilters,
+                          projects: kProjectRegistry,
                         );
                         final planCard = StudyPlanCard(
                           draft: _plan,
@@ -171,6 +191,8 @@ class _HomePageState extends State<HomePage> {
                     _ProjectSection(
                       projects: kProjectRegistry,
                       filter: _filter,
+                      subject: _subject,
+                      onClear: _clearFilters,
                       onTap: _openProject,
                     ),
                     SizedBox(height: Responsive.spacing(context, 3)),
@@ -320,12 +342,42 @@ class _StaggeredReveal extends StatelessWidget {
   }
 }
 
-/// Grade buttons for the home, with a note and a reset while one is chosen.
+/// Grade and subject buttons for the home, with a note and a reset while
+/// either is chosen.
 class _GradeFilterBar extends StatelessWidget {
-  const _GradeFilterBar({required this.selected, required this.onChanged});
+  const _GradeFilterBar({
+    required this.selected,
+    required this.onChanged,
+    required this.subject,
+    required this.onSubjectChanged,
+    required this.onClear,
+    required this.projects,
+  });
 
   final GradeFilter? selected;
   final ValueChanged<GradeFilter?> onChanged;
+  final Subject? subject;
+  final ValueChanged<Subject?> onSubjectChanged;
+  final VoidCallback onClear;
+  final List<ProjectEntry> projects;
+
+  /// Live games under [subject] for the chosen grade, for the chip's count.
+  int _count(Subject subject) => projects
+      .where(
+        (ProjectEntry e) =>
+            !e.isPlaceholder &&
+            gradeRangeMatches(e.gradeRangeLabel ?? 'All', selected) &&
+            subjectMatches(e.subjects, subject),
+      )
+      .length;
+
+  String _note(GradeFilter? grade, Subject? subject) {
+    if (grade != null && subject != null) {
+      return 'Showing ${subject.label} games for ${grade.label}. Show all';
+    }
+    if (subject != null) return 'Showing ${subject.label} games. Show all';
+    return 'Showing games for ${grade!.label}. Show all';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -385,16 +437,70 @@ class _GradeFilterBar extends StatelessWidget {
                 ),
             ],
           ),
-          if (current != null)
+          const SizedBox(height: 14),
+          Semantics(
+            header: true,
+            child: const Text(
+              'Pick a subject',
+              style: TextStyle(
+                color: BrandTheme.ink,
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: <Widget>[
+              for (final Subject s in Subject.values)
+                _subjectChip(s, _count(s)),
+            ],
+          ),
+          if (current != null || subject != null)
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton(
                 key: const ValueKey<String>('filter-reset'),
-                onPressed: () => onChanged(null),
-                child: Text('Showing games for ${current.label}. Show all'),
+                onPressed: onClear,
+                child: Text(_note(current, subject)),
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _subjectChip(Subject s, int count) {
+    final isSelected = subject == s;
+    // A subject with no game for the chosen grade is dimmed, but stays
+    // tappable so the empty message can explain.
+    final dimmed = count == 0 && !isSelected;
+    return Opacity(
+      opacity: dimmed ? 0.45 : 1,
+      child: ChoiceChip(
+        key: ValueKey<String>('subject-${s.label}'),
+        label: Text('${s.label}  $count'),
+        selected: isSelected,
+        showCheckmark: false,
+        backgroundColor: Colors.white,
+        selectedColor: BrandTheme.ocean,
+        elevation: 0,
+        pressElevation: 0,
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: isSelected ? BrandTheme.ocean : const Color(0xFF9FB2C4),
+            width: 1.5,
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        labelStyle: TextStyle(
+          color: isSelected ? Colors.white : BrandTheme.ink,
+          fontWeight: FontWeight.w700,
+        ),
+        // Tapping the selected subject again shows every subject.
+        onSelected: (_) => onSubjectChanged(isSelected ? null : s),
       ),
     );
   }
@@ -404,11 +510,15 @@ class _ProjectSection extends StatelessWidget {
   const _ProjectSection({
     required this.projects,
     required this.filter,
+    required this.subject,
+    required this.onClear,
     required this.onTap,
   });
 
   final List<ProjectEntry> projects;
   final GradeFilter? filter;
+  final Subject? subject;
+  final VoidCallback onClear;
   final ValueChanged<ProjectEntry> onTap;
 
   @override
@@ -424,7 +534,8 @@ class _ProjectSection extends StatelessWidget {
         .where(_isVisibleOnCurrentChannel)
         .where(
           (ProjectEntry entry) =>
-              gradeRangeMatches(entry.gradeRangeLabel ?? 'All', filter),
+              gradeRangeMatches(entry.gradeRangeLabel ?? 'All', filter) &&
+              subjectMatches(entry.subjects, subject),
         )
         .toList();
     final aspectRatio = projectCardAspectRatioForWidth(width);
@@ -446,21 +557,35 @@ class _ProjectSection extends StatelessWidget {
     }..removeWhere((HomeBand _, List<ProjectEntry> list) => list.isEmpty);
 
     if (bands.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.only(top: 28),
-        child: Text(
-          'No games for this grade yet.',
-          style: TextStyle(
-            color: BrandTheme.ink,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-          ),
+      return Padding(
+        padding: const EdgeInsets.only(top: 28),
+        child: Wrap(
+          spacing: 12,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            Text(
+              subject == null
+                  ? 'No games for this grade yet.'
+                  : 'No games match this grade and subject yet.',
+              style: const TextStyle(
+                color: BrandTheme.ink,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            if (subject != null)
+              TextButton(
+                key: const ValueKey<String>('filter-clear-empty'),
+                onPressed: onClear,
+                child: const Text('Clear filters'),
+              ),
+          ],
         ),
       );
     }
 
     // The unfiltered page still ends with "coming soon" tiles that fill the
-    // last row; they are left out while a grade is chosen.
+    // last row; they are left out while a grade or subject is chosen.
     final lastBand = bands.keys.last;
     var paletteIndex = 0;
     var revealIndex = 0;
@@ -475,7 +600,7 @@ class _ProjectSection extends StatelessWidget {
               final entries = bands[band]!;
               final displayProjects = <ProjectEntry>[
                 ...entries,
-                if (filter == null && band == lastBand)
+                if (filter == null && subject == null && band == lastBand)
                   ..._comingSoonEntries(entries.length, columns),
               ];
               final startPalette = paletteIndex;

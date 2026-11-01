@@ -11,6 +11,7 @@ class ProjectEntry {
     this.gradeRangeLabel,
     this.ageOrder,
     this.band,
+    this.subjects = const <Subject>{},
     this.isPlaceholder = false,
     this.channelPolicy = 'both',
     this.launchUrl,
@@ -27,6 +28,10 @@ class ProjectEntry {
   /// The home section this game sits in. A manual choice, copied from the
   /// launcher; placeholders have none.
   final HomeBand? band;
+
+  /// The subject filters this game shows under. A manual choice of its main
+  /// subjects (not every mode); placeholders have none.
+  final Set<Subject> subjects;
   final String channelPolicy;
   final String? launchUrl;
   final bool isPlaceholder;
@@ -42,6 +47,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 0,
     band: HomeBand.early,
+    subjects: <Subject>{Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'calendar_kids',
@@ -52,6 +58,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 1,
     band: HomeBand.early,
+    subjects: <Subject>{Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'emergency_kids',
@@ -62,6 +69,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 2,
     band: HomeBand.early,
+    subjects: <Subject>{Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'does_it_solve',
@@ -72,6 +80,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'K-1st',
     ageOrder: 15,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
     id: 'mahjong',
@@ -82,6 +91,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'PreK-5th',
     ageOrder: 13,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.gaming, Subject.math, Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'make_it',
@@ -92,6 +102,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'PreK-2nd',
     ageOrder: 11,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'math_adventures_kids',
@@ -103,6 +114,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'K-3rd',
     ageOrder: 18,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
     id: 'memory_match',
@@ -113,6 +125,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'PreK-2nd',
     ageOrder: 12,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.gaming, Subject.math, Subject.reading},
   ),
   ProjectEntry(
     id: 'reading_writing_kids',
@@ -123,6 +136,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'K-3rd',
     ageOrder: 17,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'sight_word_search',
@@ -133,6 +147,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'K-5th',
     ageOrder: 19,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'slice_it',
@@ -144,6 +159,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '3rd-5th',
     ageOrder: 26,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
     id: 'measure_it',
@@ -154,6 +170,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '3rd-5th',
     ageOrder: 27,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
     id: 'earth_lab',
@@ -165,6 +182,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '3rd-5th',
     ageOrder: 28,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.science},
   ),
   ProjectEntry(
     id: 'be_with_god',
@@ -176,6 +194,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'PreK-5th',
     ageOrder: 14,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.faith},
   ),
   ProjectEntry(
     id: 'chem_kids',
@@ -186,6 +205,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '5th',
     ageOrder: 999,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.science},
   ),
   ProjectEntry(
     id: 'countin_kids',
@@ -196,6 +216,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'PreK-K',
     ageOrder: 9,
     band: HomeBand.early,
+    subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
     id: 'speak_repeat',
@@ -206,6 +227,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'Early-PreK',
     ageOrder: 3,
     band: HomeBand.early,
+    subjects: <Subject>{Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'grammar_adventures_kids',
@@ -216,6 +238,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'K-2nd',
     ageOrder: 16,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'word_blend_kids',
@@ -226,6 +249,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '1st-3rd',
     ageOrder: 22,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'realm_breaker',
@@ -236,6 +260,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '1st-3rd',
     ageOrder: 23,
     band: HomeBand.growing,
+    subjects: <Subject>{Subject.gaming, Subject.reading},
   ),
   ProjectEntry(
     id: 'pumpkin_carver',
@@ -246,6 +271,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1000,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.creative},
   ),
   ProjectEntry(
     id: 'piano_synth_demo',
@@ -257,6 +283,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1001,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.creative},
   ),
   ProjectEntry(
     id: 'cooking_kids',
@@ -268,6 +295,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1002,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.lifeSkills, Subject.reading, Subject.math},
   ),
   ProjectEntry(
     id: 'paint_by_number',
@@ -278,6 +306,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1003,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.creative},
   ),
   ProjectEntry(
     id: 'anatomy_kids',
@@ -289,6 +318,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1004,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.science},
   ),
   ProjectEntry(
     id: 'farm_kids',
@@ -300,6 +330,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1005,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.lifeSkills, Subject.math},
   ),
   ProjectEntry(
     id: 'comic_kids',
@@ -310,6 +341,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1006,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
     id: 'arcade_lab',
@@ -320,16 +352,19 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1007,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
     id: 'brick_builder',
     title: 'Brick Builder',
-    description: 'Build cities, pirate islands and moon bases from colorful bricks',
+    description:
+        'Build cities, pirate islands and moon bases from colorful bricks',
     slug: 'builder',
     icon: Icons.location_city_outlined,
     gradeRangeLabel: 'All',
     ageOrder: 1008,
     band: HomeBand.everyone,
+    subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
     id: 'make_change',
@@ -340,6 +375,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '1st-3rd',
     ageOrder: 20,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.math, Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'clockwork',
@@ -350,6 +386,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '1st-3rd',
     ageOrder: 21,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.math, Subject.lifeSkills},
   ),
   ProjectEntry(
     id: 'book_fixers',
@@ -360,6 +397,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: '1st-3rd',
     ageOrder: 24,
     band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
     id: 'math_solitaire_kids',
