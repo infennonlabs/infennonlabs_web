@@ -4,10 +4,6 @@ import 'package:grade_filter_shared/grade_filter_shared.dart';
 import 'package:infennon_labs_home/main.dart';
 import 'package:infennon_labs_home/project_registry.dart';
 import 'package:infennon_labs_home/study_plan/study_catalog.dart';
-import 'package:infennon_labs_home/study_plan/study_catalog_data.dart';
-import 'package:infennon_labs_home/study_plan/study_plan_card.dart';
-import 'package:infennon_labs_home/study_plan/study_plan_page.dart';
-import 'package:infennon_labs_home/study_plan/study_runner_page.dart';
 import 'package:study_plan_shared/study_plan_shared.dart';
 
 void main() {
@@ -28,7 +24,15 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     final StudyPlanDraft draft = StudyPlanDraft();
-    await tester.pumpWidget(MaterialApp(home: StudyPlanPage(draft: draft)));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StudyPlanPage(
+          draft: draft,
+          games: studyGames(),
+          gameBuilder: studyFrameBuilder,
+        ),
+      ),
+    );
     await tester.pump();
     return draft;
   }
@@ -46,7 +50,8 @@ void main() {
   group('catalog', () {
     test('lists games in the home page order', () {
       final List<ProjectEntry> byId = <ProjectEntry>[
-        for (final StudyGameInfo g in studyGames()) g.entry,
+        for (final StudyGameInfo g in studyGames())
+          kProjectRegistry.firstWhere((ProjectEntry e) => e.id == g.id),
       ];
       for (var i = 1; i < byId.length; i++) {
         final ProjectEntry a = byId[i - 1];
@@ -103,11 +108,11 @@ void main() {
         (StudyGameInfo g) => g.id == 'piano_synth_demo',
       );
       expect(
-        piano.urlFor(null, baseUrl: 'https://x.test').toString(),
+        studyGameUrl(piano, null, baseUrl: 'https://x.test').toString(),
         'https://x.test/piano/',
       );
       expect(
-        piano.urlFor('listen', baseUrl: 'https://x.test').toString(),
+        studyGameUrl(piano, 'listen', baseUrl: 'https://x.test').toString(),
         'https://x.test/piano/?mode=listen',
       );
     });
@@ -206,7 +211,7 @@ void main() {
       // Grade buttons appear only once a game with a grade range is on offer.
       final bool hasGradedGame = studyGames().any(
         (StudyGameInfo g) =>
-            GradeSpan.parse(g.entry.gradeRangeLabel ?? 'All') != null,
+            GradeSpan.parse(g.gradeRangeLabel ?? 'All') != null,
       );
       expect(
         find.byKey(const ValueKey<String>('study-grade-K')),
@@ -361,6 +366,7 @@ void main() {
               draft: draft,
               initialGrade: GradeFilter.kindergarten,
               games: games,
+              gameBuilder: studyFrameBuilder,
             ),
           ),
         );
@@ -412,6 +418,7 @@ void main() {
                 items: items,
                 totalMinutes: minutes,
                 games: games,
+                gameBuilder: studyFrameBuilder,
                 onFinished: onFinished ?? () {},
                 idleAfterSeconds: idleAfter,
               ),

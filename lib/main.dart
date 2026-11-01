@@ -12,9 +12,6 @@ import 'grade_filter_store.dart';
 import 'home_backdrop.dart';
 import 'project_registry.dart';
 import 'study_plan/study_catalog.dart';
-import 'study_plan/study_plan_card.dart';
-import 'study_plan/study_plan_page.dart';
-import 'study_plan/study_runner_page.dart';
 
 export 'brand_theme.dart' show BrandTheme;
 
@@ -87,7 +84,13 @@ class _HomePageState extends State<HomePage> {
   void _prepareStudyPlan() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => StudyPlanPage(draft: _plan, initialGrade: _filter),
+        builder: (_) => StudyPlanPage(
+          draft: _plan,
+          games: studyGames(),
+          gameBuilder: studyFrameBuilder,
+          backdrop: const HomeBackdrop(),
+          initialGrade: _filter,
+        ),
       ),
     );
   }
@@ -99,6 +102,7 @@ class _HomePageState extends State<HomePage> {
           items: _plan.items,
           totalMinutes: _plan.totalMinutes,
           games: studyGames(),
+          gameBuilder: studyFrameBuilder,
           onFinished: _plan.clear,
         ),
       ),

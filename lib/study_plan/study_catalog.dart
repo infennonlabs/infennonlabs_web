@@ -1,9 +1,9 @@
+import 'package:flutter/widgets.dart';
 import 'package:grade_filter_shared/grade_filter_shared.dart' show HomeBand;
-import '../project_registry.dart';
-import 'study_catalog_data.dart';
-import 'study_game_data.dart';
+import 'package:study_plan_shared/study_plan_shared.dart';
 
-export 'study_game_data.dart';
+import '../project_registry.dart';
+import 'study_frame.dart';
 
 /// Where the games run when a Study Plan embeds them. Local testing points
 /// this at a local server with `--dart-define=STUDY_PLAN_GAME_BASE_URL=...`.
@@ -12,49 +12,36 @@ const String kStudyPlanGameBaseUrl = String.fromEnvironment(
   defaultValue: 'https://infennonlabs.com',
 );
 
-/// The text under the Study Plan title, on the home card and on the plan page.
-const String kStudyPlanSubtitle =
-    'Custom tailor a plan for your child to focus on their specific needs.';
-
-/// A game in the Study Plan picker: its home tile plus the modes a parent can
-/// choose and the explanations shown for them.
-class StudyGameInfo {
-  const StudyGameInfo({
-    required this.entry,
-    required this.allModesNote,
-    this.modes = const <StudyModeInfo>[],
-  });
-
-  final ProjectEntry entry;
-
-  /// What "All Modes" means for this game, for the (i) note.
-  final String allModesNote;
-
-  /// Empty when the game has no separate modes to pick.
-  final List<StudyModeInfo> modes;
-
-  String get id => entry.id;
-  String get title => entry.title;
-
-  StudyModeInfo? modeById(String id) {
-    for (final StudyModeInfo mode in modes) {
-      if (mode.id == id) return mode;
-    }
-    return null;
-  }
-
-  /// The page to embed: the game's own page, asking for [modeId] if given.
-  Uri urlFor(String? modeId, {String baseUrl = kStudyPlanGameBaseUrl}) {
-    final Uri base = Uri.parse(entry.launchUrl ?? '$baseUrl/${entry.slug}/');
-    if (modeId == null) return base;
-    return base.replace(
-      queryParameters: <String, String>{
-        ...base.queryParameters,
-        'mode': modeId,
-      },
-    );
-  }
+/// The page to embed for [game]: the game's own page, asking for [modeId] if
+/// given.
+Uri studyGameUrl(
+  StudyGameInfo game,
+  String? modeId, {
+  List<ProjectEntry> registry = kProjectRegistry,
+  String baseUrl = kStudyPlanGameBaseUrl,
+}) {
+  final ProjectEntry entry = registry.firstWhere(
+    (ProjectEntry e) => e.id == game.id,
+  );
+  final Uri base = Uri.parse(entry.launchUrl ?? '$baseUrl/${entry.slug}/');
+  if (modeId == null) return base;
+  return base.replace(
+    queryParameters: <String, String>{...base.queryParameters, 'mode': modeId},
+  );
 }
+
+/// Runs a plan item in a frame on the page. Pass it to the Study Plan screens.
+Widget studyFrameBuilder(
+  BuildContext context,
+  StudyGameInfo game,
+  String? modeId,
+  VoidCallback onActivity,
+  VoidCallback onExit,
+) => StudyFrame(
+  url: studyGameUrl(game, modeId),
+  onActivity: onActivity,
+  onExit: onExit,
+);
 
 /// The games a parent can add to a Study Plan, in home-page order (band, then
 /// age order): the games the data file marks `ready`.
@@ -69,7 +56,11 @@ List<StudyGameInfo> studyGames([
   return <StudyGameInfo>[
     for (final ProjectEntry entry in ordered)
       StudyGameInfo(
-        entry: entry,
+        id: entry.id,
+        title: entry.title,
+        description: entry.description,
+        icon: entry.icon,
+        gradeRangeLabel: entry.gradeRangeLabel,
         allModesNote: data[entry.id]!.allModesNote,
         modes: data[entry.id]!.modes,
       ),
