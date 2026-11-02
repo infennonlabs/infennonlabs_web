@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_settings_shared/game_settings_shared.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:brand_fonts_shared/brand_fonts_shared.dart';
 import 'package:grade_filter_shared/grade_filter_shared.dart';
 import 'package:mode_selection_shared/mode_selection_shared.dart';
 import 'package:study_plan_bridge_shared/study_plan_bridge_shared.dart';
@@ -50,8 +50,8 @@ class InfennonLabsApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         scaffoldBackgroundColor: const Color(0xFFF4FAFF),
-        textTheme: GoogleFonts.nunitoTextTheme(),
-        primaryTextTheme: GoogleFonts.nunitoTextTheme(),
+        textTheme: BrandFonts.nunitoTextTheme(),
+        primaryTextTheme: BrandFonts.nunitoTextTheme(),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -278,7 +278,7 @@ class _Header extends StatelessWidget {
                 child: Text(
                   'InfennonLabs',
                   style: TextStyle(
-                    fontFamily: GoogleFonts.fredoka().fontFamily,
+                    fontFamily: BrandFonts.fredokaStyle().fontFamily,
                     fontSize: isCompact ? 38 : 58,
                     height: 0.96,
                     fontWeight: FontWeight.w900,

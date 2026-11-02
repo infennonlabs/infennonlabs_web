@@ -35,7 +35,8 @@ dependencies:
     path: ../.workspace-copilot/packages/game_settings_shared
   grade_filter_shared:
     path: ../.workspace-copilot/packages/grade_filter_shared
-  google_fonts: ^8.2.1
+  brand_fonts_shared:
+    path: ../.workspace-copilot/packages/brand_fonts_shared
   mode_selection_shared:
     path: ../.workspace-copilot/packages/mode_selection_shared
   study_plan_bridge_shared:
