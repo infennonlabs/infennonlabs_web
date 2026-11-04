@@ -602,7 +602,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 120));
       expect(find.text('Great work!'), findsOneWidget);
-      expect(find.textContaining('2:00'), findsWidgets);
+      expect(find.textContaining('You used all 2 minutes'), findsOneWidget);
 
       await tester.tap(find.byKey(const ValueKey<String>('study-done')));
       await tester.pump();
