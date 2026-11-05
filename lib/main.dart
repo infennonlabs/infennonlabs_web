@@ -543,6 +543,17 @@ class _ProjectSection extends StatelessWidget {
         .toList();
     final aspectRatio = projectCardAspectRatioForWidth(width);
 
+    int byAge(ProjectEntry a, ProjectEntry b) =>
+        (a.ageOrder ?? 999).compareTo(b.ageOrder ?? 999);
+
+    // Holiday games (always grade "All") get their own section, shown first
+    // and not repeated in a grade band.
+    final holidayGames =
+        liveProjects
+            .where((ProjectEntry entry) => isHolidayGame(entry.subjects))
+            .toList()
+          ..sort(byAge);
+
     // Bands in display order; a band with no matching game is left out.
     final bands = <HomeBand, List<ProjectEntry>>{
       for (final band in HomeBand.values)
@@ -550,16 +561,32 @@ class _ProjectSection extends StatelessWidget {
             liveProjects
                 .where(
                   (ProjectEntry entry) =>
+                      !isHolidayGame(entry.subjects) &&
                       (entry.band ?? HomeBand.everyone) == band,
                 )
                 .toList()
-              ..sort(
-                (ProjectEntry a, ProjectEntry b) =>
-                    (a.ageOrder ?? 999).compareTo(b.ageOrder ?? 999),
-              ),
+              ..sort(byAge),
     }..removeWhere((HomeBand _, List<ProjectEntry> list) => list.isEmpty);
 
-    if (bands.isEmpty) {
+    // Heading and games per section, in display order.
+    final sections = <_HomeSection>[
+      if (holidayGames.isNotEmpty)
+        _HomeSection(
+          label: 'Holidays',
+          accent: _holidayAccent,
+          entries: holidayGames,
+          isLast: bands.isEmpty,
+        ),
+      for (final band in bands.keys)
+        _HomeSection(
+          label: band.label,
+          accent: band.accent,
+          entries: bands[band]!,
+          isLast: band == bands.keys.last,
+        ),
+    ];
+
+    if (sections.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(top: 28),
         child: Wrap(
@@ -589,21 +616,24 @@ class _ProjectSection extends StatelessWidget {
 
     // The unfiltered page still ends with "coming soon" tiles that fill the
     // last row; they are left out while a grade or subject is chosen.
-    final lastBand = bands.keys.last;
     var paletteIndex = 0;
     var revealIndex = 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        for (final band in bands.keys) ...<Widget>[
-          _BandHeading(band: band, count: bands[band]!.length),
+        for (final section in sections) ...<Widget>[
+          _BandHeading(
+            label: section.label,
+            accent: section.accent,
+            count: section.entries.length,
+          ),
           Builder(
             builder: (BuildContext context) {
-              final entries = bands[band]!;
+              final entries = section.entries;
               final displayProjects = <ProjectEntry>[
                 ...entries,
-                if (filter == null && subject == null && band == lastBand)
+                if (filter == null && subject == null && section.isLast)
                   ..._comingSoonEntries(entries.length, columns),
               ];
               final startPalette = paletteIndex;
@@ -666,10 +696,32 @@ class _ProjectSection extends StatelessWidget {
   }
 }
 
-class _BandHeading extends StatelessWidget {
-  const _BandHeading({required this.band, required this.count});
+const Color _holidayAccent = Color(0xFFD9622B);
 
-  final HomeBand band;
+/// One headed group of cards on the home page.
+class _HomeSection {
+  const _HomeSection({
+    required this.label,
+    required this.accent,
+    required this.entries,
+    required this.isLast,
+  });
+
+  final String label;
+  final Color accent;
+  final List<ProjectEntry> entries;
+  final bool isLast;
+}
+
+class _BandHeading extends StatelessWidget {
+  const _BandHeading({
+    required this.label,
+    required this.accent,
+    required this.count,
+  });
+
+  final String label;
+  final Color accent;
   final int count;
 
   @override
@@ -681,17 +733,14 @@ class _BandHeading extends StatelessWidget {
           Container(
             width: 14,
             height: 14,
-            decoration: BoxDecoration(
-              color: band.accent,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
           ),
           const SizedBox(width: 10),
           Flexible(
             child: Semantics(
               header: true,
               child: Text(
-                band.label,
+                label,
                 style: const TextStyle(
                   color: BrandTheme.ink,
                   fontSize: 21,

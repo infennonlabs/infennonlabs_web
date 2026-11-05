@@ -210,6 +210,22 @@ void main() {
       expect(readSavedSubjectLabel(), 'Science');
     });
 
+    testWidgets('holiday games sit in their own section, not in a band', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 6000));
+
+      expect(find.text('Holidays'), findsOneWidget);
+      expect(find.text('Pumpkin Carving'), findsOneWidget);
+
+      await pickSubject(tester, 'Holiday');
+
+      expect(find.text('Pumpkin Carving'), findsOneWidget);
+      expect(find.text('Alpha Kids'), findsNothing);
+      expect(find.text(HomeBand.everyone.label), findsNothing);
+      expect(find.text('Coming Soon'), findsNothing);
+    });
+
     testWidgets('a game with several subjects shows under each of them', (
       WidgetTester tester,
     ) async {

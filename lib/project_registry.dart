@@ -271,7 +271,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     gradeRangeLabel: 'All',
     ageOrder: 1000,
     band: HomeBand.everyone,
-    subjects: <Subject>{Subject.creative},
+    subjects: <Subject>{Subject.holiday},
   ),
   ProjectEntry(
     id: 'piano_synth_demo',
