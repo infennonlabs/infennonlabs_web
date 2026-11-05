@@ -42,7 +42,7 @@ case "${1:-}" in
       app="${entry%%:*}"
       slug="${entry##*:}"
       echo "== building $app -> /$slug/"
-      (cd "$DOCS_DIR/$app" && flutter build web --release --base-href "/$slug/" --output "$OUT/$slug")
+      (cd "$DOCS_DIR/$app" && flutter build web --release --no-web-resources-cdn --base-href "/$slug/" --output "$OUT/$slug")
       built=$((built + 1))
     done < <(game_lines "$@")
     echo "Built $built games into $OUT"

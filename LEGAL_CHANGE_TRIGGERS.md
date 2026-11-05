@@ -8,11 +8,12 @@ Owner: InfennonLabs LLC. Contact in the documents: privacy@infennonlabs.com. Not
 
 | Change | Update required |
 |---|---|
-| Google AdSense or any ads go live (`web/ads.txt` is already present) | Privacy: replace the "no advertising" section with the ad partners, cookies/identifiers, and opt-outs. Child-directed use means non-personalized ads only. Re-check the "we do not share for advertising" statements. |
+| Ads are added back (the AdSense script was removed 2026-11-04; `web/ads.txt` is kept) | Privacy: the "no advertising" statements in sections 4 and 5 become false. Replace them with the ad partners, cookies/identifiers, and opt-outs. Child-directed use means non-personalized ads only. See "If ads return" below. |
 | AppsFlyer ships (planned for the second launcher release) | Privacy: the text says "uses, or will use". Confirm it against the real network capture and the App Store / Google Play labels (`lgl_launcher/PRIVACY_AND_TRACKING_REVIEW.md` P11, P12). Settings stated: Strict SDK (iOS), no IDFA/AAID, no ATT prompt, partner sharing blocked, `anonymizeUser(true)`. If any setting changes, change the text. |
 | Firebase added | Privacy: name the exact products (Crashlytics, Analytics, Performance) and what each collects. The text currently says "may use" and promises an update. |
 | Any new SDK, analytics event, or network call | Needs the review in `lgl_launcher/CLAUDE_HANDOFF.md`, then a policy update. |
-| Nunito bundled in the website (no more runtime Google Fonts requests) | Privacy: remove the "Fonts" bullet in section 1. Today `google_fonts` fetches the typeface from Google at runtime (see `lgl_launcher/PRIVACY_AND_TRACKING_REVIEW.md` P13.1). Plan and license check: [FONT_BUNDLING_PLAN.md](FONT_BUNDLING_PLAN.md). |
+| Nunito bundled in the website (no more runtime Google Fonts requests) | **Done 2026-11-04.** Fonts come from `brand_fonts_shared`; the "Fonts" bullet and the Google table row are removed from the Privacy Policy. Any new `google_fonts` use, CDN script, or hosted-font link reopens this. |
+| Web builds use the Flutter CDN again (`--no-web-resources-cdn` dropped) | Privacy: the site would request CanvasKit from `www.gstatic.com` and a fallback font from `fonts.gstatic.com`, so the "no Google requests" claim fails. `build_learning.sh` fails the build if `flutter_bootstrap.js` lacks `"useLocalCanvasKit":true`. |
 | Any game starts saving scores or progress, or stores/sends new data | Privacy: update the "stored on your device" paragraph (today: sound, audio support and difficulty preferences in five apps, plus saved game state in `farm_kids`; re-run a search for `SharedPreferences` / `localStorage` across all apps before each release). |
 | Accounts, purchases, subscriptions, or user content | Large change to both documents (data collected, deletion flow, payment terms). Terms: liability cap becomes the greater of the amount paid in the prior six months or US$20. |
 | Address, email, or legal entity changes | Update the contact blocks in both documents. |
@@ -32,7 +33,7 @@ Owner: InfennonLabs LLC. Contact in the documents: privacy@infennonlabs.com. Not
 
 ## Wording held back until each SDK ships
 
-The first Privacy Policy describes only what is live (Cloudflare, Google Fonts). The AppsFlyer and Firebase wording below was drafted from `lgl_launcher/APPSFLYER_PLAN.md` and the compliance docs and removed on 2026-10-17. Re-check it against the real network capture and store labels before restoring it.
+The first Privacy Policy describes only what is live (Cloudflare). The AppsFlyer and Firebase wording below was drafted from `lgl_launcher/APPSFLYER_PLAN.md` and the compliance docs and removed on 2026-10-17. Re-check it against the real network capture and store labels before restoring it.
 
 **Section 1 bullet, AppsFlyer:** "Install measurement (AppsFlyer). Our mobile app uses AppsFlyer to count app installs and to see, in aggregate, how the app is used: when the app is opened, which game is opened, and roughly how long a game is played (in ranges such as under 1 minute, 1 to 5 minutes, 5 to 15 minutes, and over 15 minutes). These counts are not tied to a child, a name, an account, or any profile. We configure it for children's apps: we do not collect or use the iOS advertising identifier (IDFA) or the Android advertising ID, we do not show an App Tracking Transparency prompt, we block sharing of data with advertising partners, and we turn on AppsFlyer's anonymization setting. AppsFlyer may still receive technical information such as your IP address (which may be masked or hashed), device model and operating system version, language and region, screen size, mobile carrier codes, app version, and a random install identifier that AppsFlyer generates. (Counsel to confirm this wording against `lgl_launcher/COUNSEL_BRIEF_APPSFLYER.md`.)"
 
@@ -51,9 +52,9 @@ Standard (owner, 2026-10-17): a claim in the Privacy Policy, Terms, or store lab
 | Claim in the policy | How to validate | Status (2026-10-17) |
 |---|---|---|
 | "We do not have accounts; we do not ask for names, emails, ages, locations" | Search all apps for sign-in, text-entry of personal data, `mailto` only | Not yet searched across all apps |
-| "The Services do not include advertising partners" (Privacy s.4) | Search every `web/index.html`, `lib`, and Worker for ad/analytics scripts; proxy capture of page load | **FAILS for the home site.** `infennon_labs_home/web/index.html:41-44` loads Google's AdSense script (`adsbygoogle.js`, client `ca-pub-8017542409324420`). Fix the policy or remove the script before publishing. |
+| "The Services do not show advertising; the website loads no ad-network code" (Privacy s.4, s.5) | Search every `web/index.html`, `lib`, and Worker for ad/analytics scripts; proxy capture of page load | AdSense meta tag and loader removed from `infennon_labs_home/web/index.html` 2026-11-04. Code read; local-serve capture of the built site showed no ad host. Live capture pending. |
 | "Cloudflare processes your IP address and request details" | Architecture (Worker + assets); confirm in Cloudflare dashboard which features are on (analytics, bot management) | Code read; dashboard not checked |
-| "Our website loads its typeface from Google Fonts" | Proxy capture; `GoogleFonts.*` calls with fetching enabled | Code read; capture pending (P13.1) |
+| "The website makes no requests to Google servers" (implied by removing the Google Fonts and AdSense text) | Proxy/Chrome capture of a page load of the deployed site; build output check | Release build with `--no-web-resources-cdn`: `flutter_bootstrap.js` has `"useLocalCanvasKit":true`, Roboto fallback font served from `assets/fonts/fallback/`; headless Chrome load of the built site requested only its own host (2026-11-04). Live capture pending. Browser speech voices are the visitor's browser, not our site (owner accepted 2026-11-04). |
 | "Games save preferences/game state on your device; not sent to us" | Search all apps for `SharedPreferences`/storage; check no upload code; inspect browser Local Storage on a live game | Code read: prefs in 5 apps, game state in `farm_kids`. Not observed in a browser. |
 | Cookies | DevTools, Application, Cookies on the live site | Owner chose to defer; policy is silent on cookies |
 | "We do not sell personal information; we do not build profiles" | Code read for no data export; no SDKs present | Code read: no analytics/ad/DB packages in app pubspecs |
@@ -64,25 +65,16 @@ Standard (owner, 2026-10-17): a claim in the Privacy Policy, Terms, or store lab
 
 Release rule: no policy sentence ships that is "unverified", and no SDK ships until its held-back wording has its row verified.
 
-## AdSense and children: status
+## AdSense (removed 2026-11-04)
 
-Source: Google AdSense help pages on child-directed treatment, TFAT, restricted data processing, and the EU User Consent Policy (read 2026-10-17 via summaries; Search Console steps not yet read).
+The AdSense loader script and `google-adsense-account` meta tag were removed from `infennon_labs_home/web/index.html`. `web/ads.txt` is kept on purpose (static file, no visitor request to Google). History kept for a future return:
 
-| Item | Status |
-|---|---|
-| Site flagged as child-directed in Search Console (domain property `infennonlabs.com`) | Done by owner 2026-10-17. Google says it may take time to apply. Not yet confirmed to affect ad requests. |
-| Cloudflare DNS setting added by owner for the above | Done by owner (record type/value not noted here; add it) |
-| Auto ads | Disabled by owner 2026-10-17. Revisit with manual ad units (`<ins>` per page) carrying `data-tag-for-age-treatment="1"` (and optionally `data-restrict-data-processing="1"`). The AdSense loader script is still in `web/index.html`. |
-| Restricted data processing (RDP) in AdSense UI | Not yet confirmed |
-| EEA/UK/Switzerland consent message (certified CMP) or regional ad limit | Not done |
-| Does child treatment apply to Auto ads? | Unknown. Per-request attribute `data-tag-for-age-treatment="1"` needs an `<ins>` element, which Auto ads does not give us. |
-| Observed in a real ad request (child treatment, `rdp=1`, no ad IDs) | Not done; do this when ads first serve, and log it in the Claims register |
-| Privacy Policy section 4 wording (non-personalized ads for children) | Draft only; stays unverified until the row above is done |
-| Counsel review of children's advertising language | Pending |
+- Site was flagged child-directed in Search Console (domain property `infennonlabs.com`) by the owner on 2026-10-17, with a matching Cloudflare DNS record; auto ads were disabled. Both remain set outside the code.
+- No ad request was ever observed in our checks; we have no record of ads serving.
 
-## Open before ads go live (owner decisions 2026-10-17)
+## If ads return
 
-- Verify the child-directed flag in a real ad request once AdSense approves the site and ads serve (child age treatment, no ad IDs; `&rdp=1` if RDP is used). Log the result in the Claims register. Until then, Privacy s.5 says only that we "make every effort to limit and block personalized advertising".
-- Decide on the EEA/UK/Switzerland consent message (Google-certified CMP) or limiting ads in those regions. A missing CMP is not a Do Not Track signal; per Google, traffic without a certified CMP can only receive non-personalized or limited ads, and consent may still be required for cookies.
-- Do Not Track sentence removed from the policy (owner, 2026-10-17); counsel to confirm no disclosure is required.
-- Links to Cloudflare and Google privacy policies are in the Privacy s.3 table; keep them current.
+- Use manual ad units (`<ins>` per page) with `data-tag-for-age-treatment="1"` (and optionally `data-restrict-data-processing="1"`); auto ads give no way to set the child attribute.
+- Verify the child-directed flag in a real ad request (child age treatment, no ad IDs; `&rdp=1` if RDP is used) and log it in the Claims register before changing the policy wording.
+- Decide on the EEA/UK/Switzerland consent message (Google-certified CMP) or limit ads in those regions.
+- Rewrite Privacy sections 1, 3, 4, 5 and 6 (ad provider, data handling) and get counsel review of the children's advertising language.
