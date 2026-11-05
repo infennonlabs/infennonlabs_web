@@ -546,7 +546,7 @@ class _ProjectSection extends StatelessWidget {
     int byAge(ProjectEntry a, ProjectEntry b) =>
         (a.ageOrder ?? 999).compareTo(b.ageOrder ?? 999);
 
-    // Holiday games (always grade "All") get their own section, shown first
+    // Holiday games (always grade "All") get their own section, shown last
     // and not repeated in a grade band.
     final holidayGames =
         liveProjects
@@ -568,21 +568,23 @@ class _ProjectSection extends StatelessWidget {
               ..sort(byAge),
     }..removeWhere((HomeBand _, List<ProjectEntry> list) => list.isEmpty);
 
-    // Heading and games per section, in display order.
+    // Heading and games per section, in display order: the grade bands, then
+    // Holidays last. The unfiltered page's "coming soon" tiles close the last
+    // grade band, not the Holidays section.
     final sections = <_HomeSection>[
-      if (holidayGames.isNotEmpty)
-        _HomeSection(
-          label: 'Holidays',
-          accent: _holidayAccent,
-          entries: holidayGames,
-          isLast: bands.isEmpty,
-        ),
       for (final band in bands.keys)
         _HomeSection(
           label: band.label,
           accent: band.accent,
           entries: bands[band]!,
           isLast: band == bands.keys.last,
+        ),
+      if (holidayGames.isNotEmpty)
+        _HomeSection(
+          label: 'Holidays',
+          accent: _holidayAccent,
+          entries: holidayGames,
+          isLast: false,
         ),
     ];
 

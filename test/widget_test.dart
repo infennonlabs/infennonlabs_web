@@ -210,6 +210,25 @@ void main() {
       expect(readSavedSubjectLabel(), 'Science');
     });
 
+    testWidgets('the Holidays section comes after every grade band', (
+      WidgetTester tester,
+    ) async {
+      await pumpAtSize(tester, size: const Size(1200, 8000));
+
+      final holidays = tester.getTopLeft(find.text('Holidays')).dy;
+      for (final band in HomeBand.values) {
+        final heading = find.text(band.label);
+        if (heading.evaluate().isNotEmpty) {
+          expect(tester.getTopLeft(heading).dy, lessThan(holidays));
+        }
+      }
+      // The coming-soon tiles close the last grade band, above Holidays.
+      expect(
+        tester.getTopLeft(find.text('Coming Soon').first).dy,
+        lessThan(holidays),
+      );
+    });
+
     testWidgets('holiday games sit in their own section, not in a band', (
       WidgetTester tester,
     ) async {
