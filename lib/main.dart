@@ -176,15 +176,15 @@ class _HomePageState extends State<HomePage> {
                             ],
                           );
                         }
-                        return IntrinsicHeight(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Expanded(flex: 3, child: filterBar),
-                              const SizedBox(width: 16),
-                              Expanded(flex: 2, child: planCard),
-                            ],
-                          ),
+                        // The card keeps its own height; stretching it to the
+                        // filters left a blank area under its button.
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(flex: 3, child: filterBar),
+                            const SizedBox(width: 16),
+                            Expanded(flex: 2, child: planCard),
+                          ],
                         );
                       },
                     ),
@@ -391,7 +391,7 @@ class _GradeFilterBar extends StatelessWidget {
           Semantics(
             header: true,
             child: const Text(
-              'Find games for your grade',
+              'Filters',
               style: TextStyle(
                 color: BrandTheme.ink,
                 fontSize: 17,
@@ -399,65 +399,43 @@ class _GradeFilterBar extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: <Widget>[
-              for (final grade in GradeFilter.values)
-                ChoiceChip(
-                  key: ValueKey<String>('filter-${grade.label}'),
-                  label: Text(grade.label),
-                  selected: current == grade,
-                  showCheckmark: false,
-                  // White buttons with a soft border read clearly on the
-                  // page background; the chosen grade fills in.
-                  backgroundColor: Colors.white,
-                  selectedColor: BrandTheme.ocean,
-                  elevation: 0,
-                  pressElevation: 0,
-                  shape: StadiumBorder(
-                    side: BorderSide(
-                      color: current == grade
-                          ? BrandTheme.ocean
-                          : const Color(0xFF9FB2C4),
-                      width: 1.5,
-                    ),
+          const SizedBox(height: 8),
+          _row('Grade', <Widget>[
+            for (final grade in GradeFilter.values)
+              ChoiceChip(
+                key: ValueKey<String>('filter-${grade.label}'),
+                label: Text(grade.label),
+                selected: current == grade,
+                showCheckmark: false,
+                visualDensity: VisualDensity.compact,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                // White buttons with a soft border read clearly on the
+                // page background; the chosen grade fills in.
+                backgroundColor: Colors.white,
+                selectedColor: BrandTheme.ocean,
+                elevation: 0,
+                pressElevation: 0,
+                shape: StadiumBorder(
+                  side: BorderSide(
+                    color: current == grade
+                        ? BrandTheme.ocean
+                        : const Color(0xFF9FB2C4),
+                    width: 1.5,
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 8,
-                  ),
-                  labelStyle: TextStyle(
-                    color: current == grade ? Colors.white : BrandTheme.ink,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  // Tapping the selected grade again shows every game.
-                  onSelected: (_) => onChanged(current == grade ? null : grade),
                 ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Semantics(
-            header: true,
-            child: const Text(
-              'Pick a subject',
-              style: TextStyle(
-                color: BrandTheme.ink,
-                fontSize: 17,
-                fontWeight: FontWeight.w900,
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                labelStyle: TextStyle(
+                  color: current == grade ? Colors.white : BrandTheme.ink,
+                  fontWeight: FontWeight.w700,
+                ),
+                // Tapping the selected grade again shows every game.
+                onSelected: (_) => onChanged(current == grade ? null : grade),
               ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: <Widget>[
-              for (final Subject s in Subject.values)
-                _subjectChip(s, _count(s)),
-            ],
-          ),
+          ]),
+          const SizedBox(height: 8),
+          _row('Subject', <Widget>[
+            for (final Subject s in Subject.values) _subjectChip(s, _count(s)),
+          ]),
           if (current != null || subject != null)
             Align(
               alignment: Alignment.centerLeft,
@@ -469,6 +447,29 @@ class _GradeFilterBar extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+
+  /// A filter's name inline with its chips, so the block stays short.
+  Widget _row(String label, List<Widget> chips) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 64,
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: BrandTheme.ink,
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        ...chips,
+      ],
     );
   }
 
@@ -484,6 +485,8 @@ class _GradeFilterBar extends StatelessWidget {
         label: Text('${s.label}  $count'),
         selected: isSelected,
         showCheckmark: false,
+        visualDensity: VisualDensity.compact,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         backgroundColor: Colors.white,
         selectedColor: BrandTheme.ocean,
         elevation: 0,
@@ -494,7 +497,7 @@ class _GradeFilterBar extends StatelessWidget {
             width: 1.5,
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         labelStyle: TextStyle(
           color: isSelected ? Colors.white : BrandTheme.ink,
           fontWeight: FontWeight.w700,
