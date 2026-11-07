@@ -600,7 +600,9 @@ void main() {
       );
       await tester.tap(find.byKey(const ValueKey<String>('study-frame')));
       await tester.pump();
-      await tester.pump(const Duration(seconds: 120));
+      // 120 s of play, plus the "Up next" screens between items, which do not
+      // use the plan's time.
+      await tester.pump(const Duration(seconds: 150));
       expect(find.text('Great work!'), findsOneWidget);
       expect(find.textContaining('You used all 2 minutes'), findsOneWidget);
 
@@ -610,7 +612,7 @@ void main() {
       await leave(tester);
     });
 
-    testWidgets('Done with this one ticks the item off and moves to the next', (
+    testWidgets('Done with Mode ticks the item off and moves to the next', (
       WidgetTester tester,
     ) async {
       await pumpRunner(tester, idleAfter: 1000);
