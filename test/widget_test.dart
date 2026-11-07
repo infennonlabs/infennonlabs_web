@@ -252,7 +252,7 @@ void main() {
 
       for (final label in <String>[
         'Life Skills',
-        'Reading & Writing',
+        'Read & Write',
         'Math',
       ]) {
         await pickSubject(tester, label);

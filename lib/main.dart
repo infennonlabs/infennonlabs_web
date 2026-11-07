@@ -400,42 +400,55 @@ class _GradeFilterBar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          _row('Grade', <Widget>[
-            for (final grade in GradeFilter.values)
-              ChoiceChip(
-                key: ValueKey<String>('filter-${grade.label}'),
-                label: Text(grade.label),
-                selected: current == grade,
-                showCheckmark: false,
-                visualDensity: VisualDensity.compact,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                // White buttons with a soft border read clearly on the
-                // page background; the chosen grade fills in.
-                backgroundColor: Colors.white,
-                selectedColor: BrandTheme.ocean,
-                elevation: 0,
-                pressElevation: 0,
-                shape: StadiumBorder(
-                  side: BorderSide(
-                    color: current == grade
-                        ? BrandTheme.ocean
-                        : const Color(0xFF9FB2C4),
-                    width: 1.5,
+          if (MediaQuery.sizeOf(context).width < kCompactFilterWidth)
+            CompactFilterBar(
+              accent: BrandTheme.ocean,
+              ink: BrandTheme.ink,
+              grade: current,
+              onGradeChanged: onChanged,
+              subject: subject,
+              onSubjectChanged: onSubjectChanged,
+              subjectCount: _count,
+            )
+          else ...<Widget>[
+            _row('Grade', <Widget>[
+              for (final grade in GradeFilter.values)
+                ChoiceChip(
+                  key: ValueKey<String>('filter-${grade.label}'),
+                  label: Text(grade.label),
+                  selected: current == grade,
+                  showCheckmark: false,
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  // White buttons with a soft border read clearly on the
+                  // page background; the chosen grade fills in.
+                  backgroundColor: Colors.white,
+                  selectedColor: BrandTheme.ocean,
+                  elevation: 0,
+                  pressElevation: 0,
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      color: current == grade
+                          ? BrandTheme.ocean
+                          : const Color(0xFF9FB2C4),
+                      width: 1.5,
+                    ),
                   ),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  labelStyle: TextStyle(
+                    color: current == grade ? Colors.white : BrandTheme.ink,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  // Tapping the selected grade again shows every game.
+                  onSelected: (_) => onChanged(current == grade ? null : grade),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                labelStyle: TextStyle(
-                  color: current == grade ? Colors.white : BrandTheme.ink,
-                  fontWeight: FontWeight.w700,
-                ),
-                // Tapping the selected grade again shows every game.
-                onSelected: (_) => onChanged(current == grade ? null : grade),
-              ),
-          ]),
-          const SizedBox(height: 8),
-          _row('Subject', <Widget>[
-            for (final Subject s in Subject.values) _subjectChip(s, _count(s)),
-          ]),
+            ]),
+            const SizedBox(height: 8),
+            _row('Subject', <Widget>[
+              for (final Subject s in Subject.values)
+                _subjectChip(s, _count(s)),
+            ]),
+          ],
           if (current != null || subject != null)
             Align(
               alignment: Alignment.centerLeft,
