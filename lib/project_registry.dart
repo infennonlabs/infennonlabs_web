@@ -296,6 +296,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.holiday},
   ),
   ProjectEntry(
+    id: 'christmas_kids',
+    title: 'Christmas Kids',
+    description: 'Stories, coloring, games and math for Christmas',
+    slug: 'christmas',
+    icon: Icons.ac_unit,
+    gradeRangeLabel: 'All',
+    ageOrder: 1002,
+    band: HomeBand.everyone,
+    subjects: <Subject>{Subject.holiday},
+  ),
+  ProjectEntry(
     id: 'piano_synth_demo',
     title: 'Piano Practice',
     description:
