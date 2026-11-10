@@ -185,6 +185,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.science},
   ),
   ProjectEntry(
+    id: 'find_it',
+    title: 'Hidden Treasures',
+    description: 'Find hidden items, from a toy room to a coral reef',
+    slug: 'hide-and-seek',
+    icon: Icons.visibility_outlined,
+    gradeRangeLabel: 'PreK-5th',
+    ageOrder: 29,
+    band: HomeBand.growing,
+    subjects: <Subject>{Subject.gaming},
+  ),
+  ProjectEntry(
     id: 'be_with_god',
     title: 'Be With God',
     description:
