@@ -230,6 +230,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
+    id: 'shape_pals',
+    title: 'Shape Pals',
+    description: 'Learn shapes and colors, then build with them',
+    slug: 'shapes-and-colors',
+    icon: Icons.category_outlined,
+    gradeRangeLabel: 'Early-PreK',
+    ageOrder: 10,
+    band: HomeBand.early,
+    subjects: <Subject>{Subject.creative},
+  ),
+  ProjectEntry(
     id: 'speak_repeat',
     title: 'Speak Repeat',
     description: 'Pronoun and speech practice through listen-and-repeat play',
