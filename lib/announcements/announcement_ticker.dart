@@ -89,7 +89,13 @@ class _AnnouncementTickerState extends State<AnnouncementTicker>
     final dt =
         (elapsed - _last).inMicroseconds / Duration.microsecondsPerSecond;
     _last = elapsed;
-    if (_paused || !_scroll.hasClients) return;
+    // The first tick can land before the list has been laid out (a real browser does this);
+    // jumpTo then throws, which silently ends the ticker for good.
+    if (_paused ||
+        !_scroll.hasClients ||
+        !_scroll.position.hasContentDimensions) {
+      return;
+    }
     _scroll.jumpTo(_scroll.offset + dt * widget.speed);
   }
 
