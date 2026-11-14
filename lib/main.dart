@@ -7,6 +7,11 @@ import 'package:study_plan_bridge_shared/study_plan_bridge_shared.dart';
 import 'package:study_plan_shared/study_plan_shared.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'announcements/announcement_feed.dart';
+import 'announcements/announcement_item.dart';
+import 'announcements/announcement_source.dart';
+import 'announcements/announcement_ticker.dart';
+import 'announcements/pulse_highlight.dart';
 import 'brand_theme.dart';
 import 'grade_filter_store.dart';
 import 'home_backdrop.dart';
@@ -76,6 +81,75 @@ class _HomePageState extends State<HomePage> {
   /// The Study Plan being put together. Lives only while this page is open.
   final StudyPlanDraft _plan = StudyPlanDraft();
 
+  /// The ticker's entries: tips until the deploy's feed arrives.
+  List<AnnouncementItem> _announcements = buildAnnouncements(
+    feed: null,
+    now: DateTime.now(),
+    projects: kProjectRegistry,
+  );
+
+  /// Click targets on the page, and which one is pulsing right now.
+  final Map<String, GlobalKey> _targetKeys = <String, GlobalKey>{};
+  String? _pulse;
+
+  GlobalKey _keyFor(String id) => _targetKeys.putIfAbsent(id, GlobalKey.new);
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAnnouncements();
+  }
+
+  Future<void> _loadAnnouncements() async {
+    final feed = await fetchAnnouncementFeed();
+    if (feed == null || !mounted) return;
+    setState(() {
+      _announcements = buildAnnouncements(
+        feed: feed,
+        now: DateTime.now(),
+        projects: kProjectRegistry,
+      );
+    });
+  }
+
+  /// Scrolls to what a ticker entry points at and pulses it. A game the current filters hide
+  /// is shown first.
+  void _goToAnnouncement(AnnouncementTarget target) {
+    final String id;
+    switch (target.type) {
+      case AnnouncementTargetType.studyPlan:
+        id = 'studyPlan';
+      case AnnouncementTargetType.filter:
+        id = 'filter';
+      case AnnouncementTargetType.game:
+        final game = kProjectRegistry
+            .where((ProjectEntry e) => e.id == target.gameId)
+            .firstOrNull;
+        if (game == null) return;
+        if (!(gradeRangeMatches(game.gradeRangeLabel ?? 'All', _filter) &&
+            subjectMatches(game.subjects, _subject))) {
+          _clearFilters();
+        }
+        id = 'game:${game.id}';
+    }
+    setState(() => _pulse = id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final context = _keyFor(id).currentContext;
+      if (context == null || !context.mounted) return;
+      final still = MediaQuery.disableAnimationsOf(context);
+      Scrollable.ensureVisible(
+        context,
+        alignment: 0.25,
+        duration: still ? Duration.zero : const Duration(milliseconds: 500),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  void _clearPulse(String id) {
+    if (mounted && _pulse == id) setState(() => _pulse = null);
+  }
+
   @override
   void dispose() {
     _plan.dispose();
@@ -130,6 +204,19 @@ class _HomePageState extends State<HomePage> {
     saveSubjectLabel(null);
   }
 
+  /// [child] reachable by a ticker click: keyed for scrolling, outlined while pulsing.
+  Widget _pulsing(String id, double radius, Widget child) {
+    return KeyedSubtree(
+      key: _keyFor(id),
+      child: PulseHighlight(
+        active: _pulse == id,
+        radius: radius,
+        onDone: () => _clearPulse(id),
+        child: child,
+      ),
+    );
+  }
+
   Future<void> _openProject(ProjectEntry entry) async {
     final uri = Uri.parse(entry.launchUrl ?? '$_projectBaseUrl/${entry.slug}/');
     await _launchUri(uri);
@@ -151,20 +238,36 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     const _Header(),
                     SizedBox(height: Responsive.spacing(context, 3)),
+                    // Desktop only for now.
+                    if (MediaQuery.sizeOf(context).width >= 760) ...<Widget>[
+                      AnnouncementTicker(
+                        items: _announcements,
+                        onSelect: _goToAnnouncement,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints c) {
-                        final filterBar = _GradeFilterBar(
-                          selected: _filter,
-                          onChanged: _setFilter,
-                          subject: _subject,
-                          onSubjectChanged: _setSubject,
-                          onClear: _clearFilters,
-                          projects: kProjectRegistry,
+                        final filterBar = _pulsing(
+                          'filter',
+                          18,
+                          _GradeFilterBar(
+                            selected: _filter,
+                            onChanged: _setFilter,
+                            subject: _subject,
+                            onSubjectChanged: _setSubject,
+                            onClear: _clearFilters,
+                            projects: kProjectRegistry,
+                          ),
                         );
-                        final planCard = StudyPlanCard(
-                          draft: _plan,
-                          onPrepare: _prepareStudyPlan,
-                          onStart: _startStudyPlan,
+                        final planCard = _pulsing(
+                          'studyPlan',
+                          24,
+                          StudyPlanCard(
+                            draft: _plan,
+                            onPrepare: _prepareStudyPlan,
+                            onStart: _startStudyPlan,
+                          ),
                         );
                         if (c.maxWidth < 900) {
                           return Column(
@@ -194,6 +297,8 @@ class _HomePageState extends State<HomePage> {
                       subject: _subject,
                       onClear: _clearFilters,
                       onTap: _openProject,
+                      wrapCard: (ProjectEntry entry, Widget card) =>
+                          _pulsing('game:${entry.id}', 28, card),
                     ),
                     SizedBox(height: Responsive.spacing(context, 3)),
                     const _AboutSection(),
@@ -529,6 +634,7 @@ class _ProjectSection extends StatelessWidget {
     required this.subject,
     required this.onClear,
     required this.onTap,
+    required this.wrapCard,
   });
 
   final List<ProjectEntry> projects;
@@ -536,6 +642,9 @@ class _ProjectSection extends StatelessWidget {
   final Subject? subject;
   final VoidCallback onClear;
   final ValueChanged<ProjectEntry> onTap;
+
+  /// Wraps a live game's card (the home uses it to make cards reachable from the ticker).
+  final Widget Function(ProjectEntry entry, Widget card) wrapCard;
 
   @override
   Widget build(BuildContext context) {
@@ -669,13 +778,14 @@ class _ProjectSection extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final entry = displayProjects[index];
                   final palette = ModePalettes.byIndex(startPalette + index);
+                  final card = _ProjectCard(
+                    entry: entry,
+                    palette: palette,
+                    onTap: entry.isPlaceholder ? null : () => onTap(entry),
+                  );
                   return _StaggeredReveal(
                     index: startReveal + index,
-                    child: _ProjectCard(
-                      entry: entry,
-                      palette: palette,
-                      onTap: entry.isPlaceholder ? null : () => onTap(entry),
-                    ),
+                    child: entry.isPlaceholder ? card : wrapCard(entry, card),
                   );
                 },
               );
