@@ -252,6 +252,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.creative},
   ),
   ProjectEntry(
+    id: 'animal_sounds',
+    title: 'Animal Sounds',
+    description: 'Hear animals, learn their names and where they live',
+    slug: 'animals',
+    icon: Icons.pets_outlined,
+    gradeRangeLabel: 'PreK-K',
+    ageOrder: 11,
+    band: HomeBand.early,
+    subjects: <Subject>{Subject.science},
+  ),
+  ProjectEntry(
     id: 'trace_lab',
     title: 'Trace Lab',
     description: 'Trace letters, numbers and words with your finger',

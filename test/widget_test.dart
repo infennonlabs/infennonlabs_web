@@ -201,10 +201,12 @@ void main() {
       expect(find.text('Earth Lab'), findsOneWidget);
       expect(find.text('Chem Kids'), findsOneWidget);
       expect(find.text('Anatomy Kids'), findsOneWidget);
+      expect(find.text('Animal Sounds'), findsOneWidget);
       expect(find.text('Alpha Kids'), findsNothing);
       expect(find.text('Clockwork'), findsNothing);
-      // No Science game sits in Early learners or Growing learners.
-      expect(find.text(HomeBand.early.label), findsNothing);
+      // Animal Sounds is the only Science game in Early learners; none sit
+      // in Growing learners.
+      expect(find.text(HomeBand.early.label), findsOneWidget);
       expect(find.text(HomeBand.growing.label), findsNothing);
       expect(find.text('Coming Soon'), findsNothing);
       expect(readSavedSubjectLabel(), 'Science');
@@ -289,8 +291,8 @@ void main() {
       expect(chip('Faith & Values', 1), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey<String>('filter-PreK')));
       await tester.pump();
-      // Anatomy Kids is the only Science game that reaches PreK.
-      expect(chip('Science', 1), findsOneWidget);
+      // Anatomy Kids and Animal Sounds are the Science games that reach PreK.
+      expect(chip('Science', 2), findsOneWidget);
     });
 
     testWidgets('tapping again or Show all clears both filters', (
