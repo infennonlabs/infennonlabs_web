@@ -177,7 +177,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     title: 'Discovery Lab',
     description: 'Gravity, circuits, plasma and magnets to play with',
     slug: 'discovery-science',
-    icon: Icons.science_outlined,
+    icon: Icons.psychology_alt_outlined,
     gradeRangeLabel: '1st-5th',
     ageOrder: 28,
     band: HomeBand.bigKids,
