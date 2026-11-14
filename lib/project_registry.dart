@@ -184,6 +184,18 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.science},
   ),
   ProjectEntry(
+    id: 'key_quest',
+    title: 'Key Quest',
+    description:
+        'Learn to type with a friendly wizard, from the home row to symbols',
+    slug: 'learn-to-type',
+    icon: Icons.keyboard_outlined,
+    gradeRangeLabel: '1st-5th',
+    ageOrder: 25,
+    band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.reading},
+  ),
+  ProjectEntry(
     id: 'earth_lab',
     title: 'Earth Lab',
     description:
