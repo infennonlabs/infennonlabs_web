@@ -252,6 +252,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.creative},
   ),
   ProjectEntry(
+    id: 'trace_lab',
+    title: 'Trace Lab',
+    description: 'Trace letters, numbers and words with your finger',
+    slug: 'writing',
+    icon: Icons.draw_outlined,
+    gradeRangeLabel: 'PreK-K',
+    ageOrder: 11,
+    band: HomeBand.early,
+    subjects: <Subject>{Subject.reading},
+  ),
+  ProjectEntry(
     id: 'speak_repeat',
     title: 'Speak Repeat',
     description: 'Pronoun and speech practice through listen-and-repeat play',
