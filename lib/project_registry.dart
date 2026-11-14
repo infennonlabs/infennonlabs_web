@@ -173,6 +173,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.math},
   ),
   ProjectEntry(
+    id: 'discovery_lab',
+    title: 'Discovery Lab',
+    description: 'Gravity, circuits, plasma and magnets to play with',
+    slug: 'discovery-science',
+    icon: Icons.science_outlined,
+    gradeRangeLabel: '1st-5th',
+    ageOrder: 28,
+    band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.science},
+  ),
+  ProjectEntry(
     id: 'earth_lab',
     title: 'Earth Lab',
     description:
@@ -180,7 +191,7 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     slug: 'earth',
     icon: Icons.public_outlined,
     gradeRangeLabel: '3rd-5th',
-    ageOrder: 28,
+    ageOrder: 29,
     band: HomeBand.bigKids,
     subjects: <Subject>{Subject.science},
   ),
