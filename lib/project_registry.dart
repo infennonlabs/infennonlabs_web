@@ -286,6 +286,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.reading},
   ),
   ProjectEntry(
+    id: 'puzzle_puzzle',
+    title: 'Puzzle Puzzle',
+    description: 'Build jigsaw puzzles',
+    slug: 'puzzle',
+    icon: Icons.view_module_outlined,
+    gradeRangeLabel: 'PreK-K',
+    ageOrder: 12,
+    band: HomeBand.early,
+    subjects: <Subject>{Subject.creative},
+  ),
+  ProjectEntry(
     id: 'speak_repeat',
     title: 'Speak Repeat',
     description: 'Pronoun and speech practice through listen-and-repeat play',
