@@ -1,3 +1,5 @@
+import 'package:back_to_top_shared/back_to_top_shared.dart'
+    show BackToTopButton;
 import 'package:flutter/material.dart';
 import 'package:game_settings_shared/game_settings_shared.dart';
 import 'package:brand_fonts_shared/brand_fonts_shared.dart';
@@ -94,9 +96,36 @@ class _HomePageState extends State<HomePage> {
 
   GlobalKey _keyFor(String id) => _targetKeys.putIfAbsent(id, GlobalKey.new);
 
+  final ScrollController _scroll = ScrollController();
+
+  /// Marks the About section, so the Back to top button can tell when it is on screen.
+  final GlobalKey _aboutKey = GlobalKey();
+
+  /// True once any part of the About section is in view.
+  final ValueNotifier<bool> _aboutInView = ValueNotifier<bool>(false);
+
+  void _onScroll() {
+    final RenderObject? box = _aboutKey.currentContext?.findRenderObject();
+    var inView = false;
+    if (box is RenderBox && box.attached) {
+      final double top = box.localToGlobal(Offset.zero).dy;
+      inView = top < MediaQuery.sizeOf(context).height;
+    }
+    if (inView != _aboutInView.value) _aboutInView.value = inView;
+  }
+
+  void _scrollToTop() {
+    _scroll.animateTo(
+      0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    _scroll.addListener(_onScroll);
     _loadAnnouncements();
   }
 
@@ -152,6 +181,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _scroll.dispose();
+    _aboutInView.dispose();
     _plan.dispose();
     super.dispose();
   }
@@ -232,6 +263,7 @@ class _HomePageState extends State<HomePage> {
             child: ResponsivePage(
               maxWidth: 1180,
               child: SingleChildScrollView(
+                controller: _scroll,
                 padding: const EdgeInsets.only(bottom: 40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -301,7 +333,7 @@ class _HomePageState extends State<HomePage> {
                           _pulsing('game:${entry.id}', 28, card),
                     ),
                     SizedBox(height: Responsive.spacing(context, 3)),
-                    const _AboutSection(),
+                    KeyedSubtree(key: _aboutKey, child: const _AboutSection()),
                     SizedBox(height: Responsive.spacing(context, 3)),
                     const _ContactSection(),
                     SizedBox(height: Responsive.spacing(context, 1.5)),
@@ -310,6 +342,17 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+          ),
+          // Desktop only, once About is on screen.
+          ValueListenableBuilder<bool>(
+            valueListenable: _aboutInView,
+            builder: (BuildContext context, bool inView, _) {
+              return BackToTopButton(
+                key: const ValueKey<String>('home-to-top'),
+                visible: inView && MediaQuery.sizeOf(context).width >= 760,
+                onPressed: _scrollToTop,
+              );
+            },
           ),
         ],
       ),

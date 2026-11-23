@@ -36,6 +36,71 @@ void main() {
     expect(find.text('Play Now'), findsWidgets);
   });
 
+  testWidgets('Back to top appears once About is on screen (desktop only)', (
+    WidgetTester tester,
+  ) async {
+    // Cards overflow a little under the test font once a second frame is
+    // pumped; that is not what this test checks.
+    final previous = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails d) {
+      if (!d.exceptionAsString().contains('overflowed')) previous?.call(d);
+    };
+    addTearDown(() => FlutterError.onError = previous);
+    await pumpAtSize(tester, size: const Size(1200, 800));
+    final button = find.byKey(const ValueKey<String>('home-to-top'));
+    double opacity() => tester
+        .widget<AnimatedOpacity>(
+          find.descendant(of: button, matching: find.byType(AnimatedOpacity)),
+        )
+        .opacity;
+    final scrollable = find.byType(Scrollable).first;
+    double offset() =>
+        tester.state<ScrollableState>(scrollable).position.pixels;
+
+    expect(opacity(), 0);
+
+    // Well short of About: still hidden.
+    await tester.drag(scrollable, const Offset(0, -300));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(opacity(), 0);
+
+    // Scroll until About's heading is on screen.
+    await tester.dragUntilVisible(
+      find.text('About'),
+      scrollable,
+      const Offset(0, -300),
+    );
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(opacity(), 1);
+
+    await tester.tap(find.text('Back to top'));
+    await tester.pump(); // the scroll animation starts on this frame
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(offset(), 0);
+    expect(opacity(), 0);
+  });
+
+  testWidgets('Back to top stays hidden on a narrow screen', (
+    WidgetTester tester,
+  ) async {
+    await pumpAtSize(tester, size: const Size(500, 800));
+    await tester.dragUntilVisible(
+      find.text('About'),
+      find.byType(Scrollable).first,
+      const Offset(0, -300),
+    );
+    await tester.pump(const Duration(milliseconds: 600));
+    final button = find.byKey(const ValueKey<String>('home-to-top'));
+    expect(
+      tester
+          .widget<AnimatedOpacity>(
+            find.descendant(of: button, matching: find.byType(AnimatedOpacity)),
+          )
+          .opacity,
+      0,
+    );
+  });
+
   testWidgets('footer links to the published privacy policy and terms', (
     WidgetTester tester,
   ) async {
@@ -252,11 +317,7 @@ void main() {
     ) async {
       await pumpAtSize(tester, size: const Size(1200, 6000));
 
-      for (final label in <String>[
-        'Life Skills',
-        'Read & Write',
-        'Math',
-      ]) {
+      for (final label in <String>['Life Skills', 'Read & Write', 'Math']) {
         await pickSubject(tester, label);
         expect(find.text('Cooking Kids'), findsOneWidget, reason: label);
       }

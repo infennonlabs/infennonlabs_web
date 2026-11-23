@@ -31,6 +31,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  back_to_top_shared:
+    path: ../.workspace-copilot/packages/back_to_top_shared
   game_settings_shared:
     path: ../.workspace-copilot/packages/game_settings_shared
   grade_filter_shared:
