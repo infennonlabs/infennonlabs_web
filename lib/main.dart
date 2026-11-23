@@ -35,6 +35,11 @@ Future<void> _launchUri(Uri uri, {String windowName = '_self'}) async {
   );
 }
 
+// Store listings behind the Download badges. An empty URL shows "Coming soon".
+const String _playStoreUrl =
+    'https://play.google.com/store/apps/details?id=com.infennonlabs.getlearning&hl=en-US';
+const String _amazonStoreUrl = 'https://www.amazon.com/dp/B0HRR57R5D';
+
 void main() {
   // If a game's old Back to Home loaded this page inside a Study Plan frame,
   // hand the child back to the plan instead of showing the home in the frame.
@@ -1064,55 +1069,84 @@ class _ProjectCard extends StatelessWidget {
                       builder:
                           (BuildContext context, BoxConstraints constraints) {
                             final badgeGap = isCompact ? 8.0 : 10.0;
-                            final availableWidth = constraints.maxWidth;
+                            // Phones stack the four badges as a 2x2 square.
+                            final columns = isCompact ? 2 : 4;
                             final badgeWidth =
-                                (availableWidth - (badgeGap * 2)) / 3;
-                            final badgeHeight = badgeWidth.clamp(
-                              isCompact ? 34.0 : 38.0,
-                              isCompact ? 48.0 : 54.0,
-                            );
-                            final iconSize = (badgeHeight * 0.44).clamp(
-                              16.0,
-                              22.0,
+                                (constraints.maxWidth -
+                                    (badgeGap * (columns - 1))) /
+                                columns;
+                            final badgeHeight = isCompact
+                                ? 56.0
+                                : badgeWidth.clamp(38.0, 54.0);
+                            final iconSize = isCompact
+                                ? 24.0
+                                : (badgeHeight * 0.44).clamp(16.0, 22.0);
+
+                            Widget badge({
+                              required IconData icon,
+                              required String label,
+                              bool comingSoon = false,
+                              String actionLabel = 'Play Now',
+                              String? storeUrl,
+                            }) => _PlatformBadge(
+                              icon: icon,
+                              label: label,
+                              foreground: palette.foreground,
+                              background: palette.effectiveIconBackground,
+                              height: badgeHeight,
+                              iconSize: iconSize,
+                              comingSoon: comingSoon,
+                              actionLabel: actionLabel,
+                              storeUrl: storeUrl,
                             );
 
-                            return Row(
+                            final badges = <Widget>[
+                              badge(
+                                icon: Icons.desktop_windows_rounded,
+                                label: 'Desktop/Web',
+                                comingSoon: entry.isPlaceholder,
+                              ),
+                              badge(
+                                icon: Icons.apple,
+                                label: 'iOS',
+                                comingSoon: true,
+                              ),
+                              badge(
+                                icon: Icons.android_rounded,
+                                label: 'Android',
+                                actionLabel: 'Download',
+                                storeUrl: _playStoreUrl,
+                              ),
+                              badge(
+                                icon: Icons.shopping_bag_rounded,
+                                label: 'Amazon Appstore',
+                                comingSoon: _amazonStoreUrl.isEmpty,
+                                actionLabel: 'Download',
+                                storeUrl: _amazonStoreUrl.isEmpty
+                                    ? null
+                                    : _amazonStoreUrl,
+                              ),
+                            ];
+
+                            Widget row(List<Widget> items) => Row(
                               children: <Widget>[
-                                Expanded(
-                                  child: _PlatformBadge(
-                                    icon: Icons.desktop_windows_rounded,
-                                    label: 'Desktop/Web',
-                                    foreground: palette.foreground,
-                                    background: palette.effectiveIconBackground,
-                                    height: badgeHeight,
-                                    iconSize: iconSize,
-                                    comingSoon: entry.isPlaceholder,
-                                  ),
-                                ),
-                                SizedBox(width: badgeGap),
-                                Expanded(
-                                  child: _PlatformBadge(
-                                    icon: Icons.apple,
-                                    label: 'iOS',
-                                    foreground: palette.foreground,
-                                    background: palette.effectiveIconBackground,
-                                    height: badgeHeight,
-                                    iconSize: iconSize,
-                                    comingSoon: true,
-                                  ),
-                                ),
-                                SizedBox(width: badgeGap),
-                                Expanded(
-                                  child: _PlatformBadge(
-                                    icon: Icons.android_rounded,
-                                    label: 'Android',
-                                    foreground: palette.foreground,
-                                    background: palette.effectiveIconBackground,
-                                    height: badgeHeight,
-                                    iconSize: iconSize,
-                                    comingSoon: true,
-                                  ),
-                                ),
+                                for (
+                                  var i = 0;
+                                  i < items.length;
+                                  i++
+                                ) ...<Widget>[
+                                  if (i > 0) SizedBox(width: badgeGap),
+                                  Expanded(child: items[i]),
+                                ],
+                              ],
+                            );
+
+                            if (!isCompact) return row(badges);
+                            return Column(
+                              children: <Widget>[
+                                row(badges.sublist(0, 2)),
+                                SizedBox(height: badgeGap),
+                                row(badges.sublist(2)),
                               ],
                             );
                           },
@@ -1137,8 +1171,12 @@ class _PlatformBadge extends StatelessWidget {
     required this.height,
     required this.iconSize,
     required this.comingSoon,
+    this.actionLabel = 'Play Now',
+    this.storeUrl,
   });
 
+  final String actionLabel;
+  final String? storeUrl;
   final IconData icon;
   final String label;
   final Color foreground;
@@ -1157,63 +1195,78 @@ class _PlatformBadge extends StatelessWidget {
         ? const Color(0xFFF1F4F8)
         : background.withValues(alpha: 0.18);
 
-    return Tooltip(
-      message: comingSoon ? '$label coming soon' : label,
-      child: SizedBox(
-        height: height,
-        child: Container(
-          decoration: BoxDecoration(
-            color: badgeBackground,
-            borderRadius: BorderRadius.circular(
-              comingSoon ? height * 0.22 : height * 0.36,
-            ),
-            border: Border.all(
-              color: comingSoon
-                  ? const Color(0xFFD7DEE8)
-                  : foreground.withValues(alpha: 0.16),
-            ),
+    final url = storeUrl;
+    final badge = SizedBox(
+      height: height,
+      child: Container(
+        decoration: BoxDecoration(
+          color: badgeBackground,
+          borderRadius: BorderRadius.circular(
+            comingSoon ? height * 0.22 : height * 0.36,
           ),
-          child: comingSoon
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(icon, size: iconSize, color: const Color(0xFF738091)),
-                    SizedBox(height: height * 0.08),
-                    Text(
-                      'Coming soon',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: const Color(0xFF738091),
-                        fontSize: height * 0.18,
-                        fontWeight: FontWeight.w800,
-                        height: 1,
-                      ),
-                    ),
-                  ],
-                )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(icon, size: iconSize, color: badgeForeground),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Play Now',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: badgeForeground,
-                        fontSize: height * 0.18,
-                        fontWeight: FontWeight.w800,
-                        height: 1,
-                      ),
-                    ),
-                  ],
-                ),
+          border: Border.all(
+            color: comingSoon
+                ? const Color(0xFFD7DEE8)
+                : foreground.withValues(alpha: 0.16),
+          ),
         ),
+        child: comingSoon
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(icon, size: iconSize, color: const Color(0xFF738091)),
+                  SizedBox(height: height * 0.08),
+                  Text(
+                    'Coming soon',
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: const Color(0xFF738091),
+                      fontSize: height * 0.18,
+                      fontWeight: FontWeight.w800,
+                      height: 1,
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(icon, size: iconSize, color: badgeForeground),
+                  const SizedBox(height: 2),
+                  Text(
+                    actionLabel,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: badgeForeground,
+                      fontSize: height * 0.18,
+                      fontWeight: FontWeight.w800,
+                      height: 1,
+                    ),
+                  ),
+                ],
+              ),
       ),
+    );
+    return Tooltip(
+      message: comingSoon
+          ? '$label coming soon'
+          : url == null
+          ? label
+          : 'Download on $label',
+      child: url == null
+          ? badge
+          : MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => _launchUri(Uri.parse(url), windowName: '_blank'),
+                child: badge,
+              ),
+            ),
     );
   }
 }
