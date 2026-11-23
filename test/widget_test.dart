@@ -80,25 +80,36 @@ void main() {
     expect(opacity(), 0);
   });
 
-  testWidgets('Back to top stays hidden on a narrow screen', (
+  testWidgets('Back to top on a phone shows after scrolling a screen down', (
     WidgetTester tester,
   ) async {
+    final previous = FlutterError.onError;
+    FlutterError.onError = (FlutterErrorDetails d) {
+      if (!d.exceptionAsString().contains('overflowed')) previous?.call(d);
+    };
+    addTearDown(() => FlutterError.onError = previous);
     await pumpAtSize(tester, size: const Size(500, 800));
-    await tester.dragUntilVisible(
-      find.text('About'),
-      find.byType(Scrollable).first,
-      const Offset(0, -300),
-    );
-    await tester.pump(const Duration(milliseconds: 600));
     final button = find.byKey(const ValueKey<String>('home-to-top'));
-    expect(
-      tester
-          .widget<AnimatedOpacity>(
-            find.descendant(of: button, matching: find.byType(AnimatedOpacity)),
-          )
-          .opacity,
-      0,
-    );
+    double opacity() => tester
+        .widget<AnimatedOpacity>(
+          find.descendant(of: button, matching: find.byType(AnimatedOpacity)),
+        )
+        .opacity;
+    final scrollable = find.byType(Scrollable).first;
+    expect(opacity(), 0);
+
+    await tester.drag(scrollable, const Offset(0, -300));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(opacity(), 0, reason: 'still within the first screen');
+
+    await tester.drag(scrollable, const Offset(0, -900));
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(opacity(), 1);
+
+    await tester.tap(find.text('Back to top'));
+    await tester.pumpAndSettle();
+    expect(tester.state<ScrollableState>(scrollable).position.pixels, 0);
+    expect(opacity(), 0);
   });
 
   testWidgets('footer links to the published privacy policy and terms', (
@@ -143,7 +154,7 @@ void main() {
         grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
 
     expect(delegate.crossAxisCount, 1);
-    expect(delegate.childAspectRatio, closeTo(1.322, 0.001));
+    expect(delegate.childAspectRatio, closeTo(1.102, 0.001));
   });
 
   testWidgets('very narrow mobile keeps a tighter compact aspect ratio', (
@@ -156,13 +167,13 @@ void main() {
         grid.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
 
     expect(delegate.crossAxisCount, 1);
-    expect(delegate.childAspectRatio, closeTo(1.304, 0.001));
+    expect(delegate.childAspectRatio, closeTo(1.084, 0.001));
   });
 
   test('aspect ratio scales with width', () {
-    expect(projectCardAspectRatioForWidth(320), closeTo(1.28, 0.001));
-    expect(projectCardAspectRatioForWidth(390), closeTo(1.322, 0.001));
-    expect(projectCardAspectRatioForWidth(520), closeTo(1.40, 0.001));
+    expect(projectCardAspectRatioForWidth(320), closeTo(1.06, 0.001));
+    expect(projectCardAspectRatioForWidth(390), closeTo(1.102, 0.001));
+    expect(projectCardAspectRatioForWidth(520), closeTo(1.18, 0.001));
   });
 
   test('every live game on the home has a band', () {

@@ -35,6 +35,9 @@ Future<void> _launchUri(Uri uri, {String windowName = '_self'}) async {
   );
 }
 
+/// Width from which the home counts as desktop for the Back to top rule.
+const double _desktopToTopWidth = 760;
+
 // Store listings behind the Download badges. An empty URL shows "Coming soon".
 const String _playStoreUrl =
     'https://play.google.com/store/apps/details?id=com.infennonlabs.getlearning&hl=en-US';
@@ -106,15 +109,19 @@ class _HomePageState extends State<HomePage> {
   /// Marks the About section, so the Back to top button can tell when it is on screen.
   final GlobalKey _aboutKey = GlobalKey();
 
-  /// True once any part of the About section is in view.
+  /// Whether Back to top shows: on desktop once any part of About is in view; on a
+  /// phone, once the page is scrolled more than a screen down (the list is very long).
   final ValueNotifier<bool> _aboutInView = ValueNotifier<bool>(false);
 
   void _onScroll() {
     final RenderObject? box = _aboutKey.currentContext?.findRenderObject();
+    final Size size = MediaQuery.sizeOf(context);
     var inView = false;
-    if (box is RenderBox && box.attached) {
+    if (size.width < _desktopToTopWidth) {
+      inView = _scroll.hasClients && _scroll.offset > size.height;
+    } else if (box is RenderBox && box.attached) {
       final double top = box.localToGlobal(Offset.zero).dy;
-      inView = top < MediaQuery.sizeOf(context).height;
+      inView = top < size.height;
     }
     if (inView != _aboutInView.value) _aboutInView.value = inView;
   }
@@ -348,13 +355,13 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Desktop only, once About is on screen.
+          // Desktop: once About is on screen. Phone: once scrolled past one screen.
           ValueListenableBuilder<bool>(
             valueListenable: _aboutInView,
             builder: (BuildContext context, bool inView, _) {
               return BackToTopButton(
                 key: const ValueKey<String>('home-to-top'),
-                visible: inView && MediaQuery.sizeOf(context).width >= 760,
+                visible: inView,
                 onPressed: _scrollToTop,
               );
             },
@@ -374,7 +381,9 @@ double projectCardAspectRatioForWidth(double width) {
 
   if (columns == 1) {
     final normalized = ((width - 320) / 200).clamp(0.0, 1.0);
-    return 1.28 + (normalized * 0.12);
+    // Under 600 the four platform badges stack 2x2, which needs a taller card.
+    final base = width < 600 ? 1.06 : 1.28;
+    return base + (normalized * 0.12);
   }
 
   if (columns == 2) {
@@ -1070,26 +1079,30 @@ class _ProjectCard extends StatelessWidget {
                           (BuildContext context, BoxConstraints constraints) {
                             final badgeGap = isCompact ? 8.0 : 10.0;
                             // Phones stack the four badges as a 2x2 square.
-                            final columns = isCompact ? 2 : 4;
+                            final stacked =
+                                MediaQuery.sizeOf(context).width < 600;
+                            final columns = stacked ? 2 : 4;
                             final badgeWidth =
                                 (constraints.maxWidth -
                                     (badgeGap * (columns - 1))) /
                                 columns;
-                            final badgeHeight = isCompact
+                            final badgeHeight = stacked
                                 ? 56.0
                                 : badgeWidth.clamp(38.0, 54.0);
-                            final iconSize = isCompact
+                            final iconSize = stacked
                                 ? 24.0
                                 : (badgeHeight * 0.44).clamp(16.0, 22.0);
 
                             Widget badge({
-                              required IconData icon,
+                              IconData? icon,
+                              String? imageAsset,
                               required String label,
                               bool comingSoon = false,
                               String actionLabel = 'Play Now',
                               String? storeUrl,
                             }) => _PlatformBadge(
                               icon: icon,
+                              imageAsset: imageAsset,
                               label: label,
                               foreground: palette.foreground,
                               background: palette.effectiveIconBackground,
@@ -1118,7 +1131,7 @@ class _ProjectCard extends StatelessWidget {
                                 storeUrl: _playStoreUrl,
                               ),
                               badge(
-                                icon: Icons.shopping_bag_rounded,
+                                imageAsset: 'assets/images/amazon_apps.png',
                                 label: 'Amazon Appstore',
                                 comingSoon: _amazonStoreUrl.isEmpty,
                                 actionLabel: 'Download',
@@ -1141,7 +1154,7 @@ class _ProjectCard extends StatelessWidget {
                               ],
                             );
 
-                            if (!isCompact) return row(badges);
+                            if (!stacked) return row(badges);
                             return Column(
                               children: <Widget>[
                                 row(badges.sublist(0, 2)),
@@ -1164,7 +1177,8 @@ class _ProjectCard extends StatelessWidget {
 
 class _PlatformBadge extends StatelessWidget {
   const _PlatformBadge({
-    required this.icon,
+    this.icon,
+    this.imageAsset,
     required this.label,
     required this.foreground,
     required this.background,
@@ -1177,13 +1191,28 @@ class _PlatformBadge extends StatelessWidget {
 
   final String actionLabel;
   final String? storeUrl;
-  final IconData icon;
+  final IconData? icon;
+  final String? imageAsset;
   final String label;
   final Color foreground;
   final Color background;
   final double height;
   final double iconSize;
   final bool comingSoon;
+
+  /// The platform glyph: a Material icon, or the store's logo drawn in the badge colour.
+  Widget _glyph(Color color) {
+    final asset = imageAsset;
+    if (asset == null) return Icon(icon, size: iconSize, color: color);
+    // The store's logo as a one-colour glyph, so it matches the Material icons.
+    return Image.asset(
+      asset,
+      height: iconSize * 0.95,
+      fit: BoxFit.contain,
+      color: color,
+      colorBlendMode: BlendMode.srcIn,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1214,7 +1243,7 @@ class _PlatformBadge extends StatelessWidget {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(icon, size: iconSize, color: const Color(0xFF738091)),
+                  _glyph(const Color(0xFF738091)),
                   SizedBox(height: height * 0.08),
                   Text(
                     'Coming soon',
@@ -1233,7 +1262,7 @@ class _PlatformBadge extends StatelessWidget {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(icon, size: iconSize, color: badgeForeground),
+                  _glyph(badgeForeground),
                   const SizedBox(height: 2),
                   Text(
                     actionLabel,
