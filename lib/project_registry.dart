@@ -467,6 +467,18 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
+    id: 'house_builder',
+    title: 'House Builder',
+    description:
+        'Build and decorate your own house, yard and pets, then play in it',
+    slug: 'house-builder',
+    icon: Icons.cottage_outlined,
+    gradeRangeLabel: '1st-5th',
+    ageOrder: 29,
+    band: HomeBand.bigKids,
+    subjects: <Subject>{Subject.gaming},
+  ),
+  ProjectEntry(
     id: 'make_change',
     title: 'Make Change',
     description: 'Learn coins and bills, roll values, and how to make change',
