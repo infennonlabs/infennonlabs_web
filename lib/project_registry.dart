@@ -473,9 +473,9 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
         'Build and decorate your own house, yard and pets, then play in it',
     slug: 'house-builder',
     icon: Icons.cottage_outlined,
-    gradeRangeLabel: '1st-5th',
-    ageOrder: 29,
-    band: HomeBand.bigKids,
+    gradeRangeLabel: 'All',
+    ageOrder: 1009,
+    band: HomeBand.everyone,
     subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
