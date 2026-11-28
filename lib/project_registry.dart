@@ -219,6 +219,17 @@ const List<ProjectEntry> kProjectRegistry = <ProjectEntry>[
     subjects: <Subject>{Subject.gaming},
   ),
   ProjectEntry(
+    id: 'play_pack',
+    title: 'Play Pack',
+    description: 'Fun learning games for grades 1 to 3',
+    slug: 'play-pack',
+    icon: Icons.sports_esports_outlined,
+    gradeRangeLabel: '1st-3rd',
+    ageOrder: 30,
+    band: HomeBand.growing,
+    subjects: <Subject>{Subject.gaming, Subject.math, Subject.reading},
+  ),
+  ProjectEntry(
     id: 'be_with_god',
     title: 'Be With God',
     description:
