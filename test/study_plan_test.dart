@@ -279,28 +279,25 @@ void main() {
     testWidgets('a tight total shows a suggestion that one tap applies', (
       WidgetTester tester,
     ) async {
-      await openPlanner(tester);
+      final StudyPlanDraft draft = await openPlanner(tester);
       await tapKey(tester, 'all-modes-piano_synth_demo');
       await tapKey(tester, 'study-minutes-5');
       expect(
         find.byKey(const ValueKey<String>('study-suggestion')),
         findsOneWidget,
       );
-      expect(find.textContaining('We suggest 10 min'), findsOneWidget);
+      // The steady tray says the plan is tight and offers a one-tap fix.
+      expect(find.textContaining('is tight'), findsOneWidget);
+      expect(find.text('Use 10 min'), findsOneWidget);
 
       await tapKey(tester, 'study-use-suggestion');
       expect(
         find.byKey(const ValueKey<String>('study-suggestion')),
         findsNothing,
       );
-      expect(
-        tester
-            .widget<ChoiceChip>(
-              find.byKey(const ValueKey<String>('study-minutes-10')),
-            )
-            .selected,
-        isTrue,
-      );
+      // The minutes chips are now plain buttons, so read the choice from the
+      // plan itself.
+      expect(draft.totalMinutes, 10);
       await leave(tester);
     });
 
